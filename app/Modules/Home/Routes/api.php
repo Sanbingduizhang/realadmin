@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/home', function (Request $request) {
-    // return $request->home();
-})->middleware('auth:api');
+// Route::get('/home', function (Request $request) {
+//     // return $request->home();
+// })->middleware('auth:api');
 
 Route::group(['middleware' => ['checktoken'],'prefix' => 'home'],function () {
     Route::get('/index','IndexController@index')->name('home.index');
