@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 //     // return $request->home();
 // })->middleware('auth:api');
 
-Route::group(['middleware' => ['checktoken'],'prefix' => 'home'],function () {
-    Route::get('/index','IndexController@index')->name('home.index');
+Route::group(['prefix' => 'home'], function () {
+    Route::get('/cate', 'IndexController@cate')->name('home.cate');
+    Route::get('/index', 'IndexController@index')->name('home.index');
+    Route::get('/index-other', 'IndexController@articleOther')->name('home.articleOther');
 });
