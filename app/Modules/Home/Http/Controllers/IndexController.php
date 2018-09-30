@@ -101,4 +101,25 @@ class IndexController extends ApiBaseController
 
         return response_success(pageGo($articleRes));
     }
+
+    /**
+     * 首页获取用户相关信息
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function myArticles(Request $request)
+    {
+        //获取当前用户
+        $user = getUser($request);
+        $articleRes = $this->articleRepository
+            ->select(['id','content','updated_at'])
+            ->where([
+                'is_del' => Article::DEL_ON,
+                'userid'    => $user['id'],
+            ])
+            ->orderBy('updated_at', 'DESC')
+            ->paginate(6)->toArray();
+
+        return response_success(pageGo($articleRes));
+    }
 }

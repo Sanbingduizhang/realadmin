@@ -30,4 +30,6 @@ Route::group(['prefix' => 'home'], function () {
 Route::group(['middleware' => ['checktoken'],'prefix' => 'opera'],function () {
     //发布内容
     Route::post('/pub-text', 'ArticleController@pubText')->name('home.pubText');
+    //获取个人未删除作品，在前台页面显示
+    Route::get('/my-contents', 'IndexController@myArticles')->name('home.myArticles');
 });
