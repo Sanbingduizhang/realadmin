@@ -39,7 +39,7 @@ if (!function_exists('pageGo')) {
             'data' => $data['data'],
             'pagination' => [
                 'current' => $data['current_page'],
-                'total' => $data['total'],
+                'total_page' => $data['last_page'],
                 'per_page' => $data['per_page'],
             ],
         ];

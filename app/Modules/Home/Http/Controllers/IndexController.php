@@ -36,7 +36,7 @@ class IndexController extends ApiBaseController
         $cateRes = $this->categoryRepository
             ->where(['is_del' => Category::IS_DEL_ON])
             ->select(['id as cateid', 'name as catename'])
-            ->orderBy('id', 'DESC')
+            ->orderBy('id', 'ASC')
             ->limit(6)
             ->get()->toArray();
         return response_success($cateRes);
@@ -96,7 +96,7 @@ class IndexController extends ApiBaseController
             $this->articleRepository = $this->articleRepository->where(['is_rec' => 1]);
         }
         $articleRes = $this->articleRepository
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'DESC')
             ->paginate(6)->toArray();
 
         return response_success(pageGo($articleRes));

@@ -26,6 +26,7 @@ class CreateCategoryTable extends Migration
                 $table->string('desc')->nullable()->default(NULL)->comment('分类描述');
                 $table->integer('pid')->nullable()->default(0)->comment('父id，默认0 是顶级');
                 $table->smallInteger('is_del')->nullable()->default(1)->comment('是否删除1-未删除2-删除3-禁用');
+                $table->smallInteger('type')->nullable()->default(1)->comment('1-文本2-科技3-其他');
                 $table->dateTime('created_at')->nullable()->comment('创建于');
                 $table->dateTime('updated_at')->nullable()->comment('更新于');
             });

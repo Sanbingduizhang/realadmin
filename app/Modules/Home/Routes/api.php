@@ -19,7 +19,15 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:api');
 
 Route::group(['prefix' => 'home'], function () {
+    //获取cate分类
     Route::get('/cate', 'IndexController@cate')->name('home.cate');
+    //首页列表显示
     Route::get('/index', 'IndexController@index')->name('home.index');
+    //首页右边两个列表显示
     Route::get('/index-other', 'IndexController@articleOther')->name('home.articleOther');
+
+});
+Route::group(['middleware' => ['checktoken'],'prefix' => 'opera'],function () {
+    //发布内容
+    Route::post('/pub-text', 'ArticleController@pubText')->name('home.pubText');
 });
