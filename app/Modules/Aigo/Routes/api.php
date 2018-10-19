@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,11 +13,10 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-//getUsers
-//Route::get('/base', function (Request $request) {
-//    // return $request->base();
+
+//Route::get('/aigo', function (Request $request) {
+//    // return $request->aigo();
 //})->middleware('auth:api');
-Route::group(['middleware' => ['checktoken'],'prefix' => 'opera'],function () {
-    //获取用户个人数据
-    Route::get('/getuser', 'UserController@getUsers')->name('opera.getUsers');
+Route::group(['prefix' => '/aigo/train'],function () {
+    Route::get('/test','TrainController@test')->name('aigo.train.test');
 });
