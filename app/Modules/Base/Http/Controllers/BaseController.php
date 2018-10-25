@@ -61,9 +61,10 @@ class BaseController extends Controller
     {
         $usercode = htmlspecialchars($request->get('usercode',null));
         $pwd = htmlspecialchars($request->get('password',null));
+        $nc = htmlspecialchars($request->get('nc',null));
 
-        if (empty($usercode) || empty($pwd)) {
-            return response_failed('请输入用户名或密码');
+        if (empty($usercode) || empty($pwd) || empty($nc)) {
+            return response_failed('请输入相应参数');
         }
         //正则匹配账号
         if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]{4,15}$/',$usercode)) {
@@ -85,6 +86,7 @@ class BaseController extends Controller
         $create = $this->userInfoRepository->create([
             'usercode' => $usercode,
             'password' => Hash::make($pwd),
+            'name' => $nc,
         ]);
         if ($create) {
             return response_success(['message' => '注册成功']);

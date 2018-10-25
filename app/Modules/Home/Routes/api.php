@@ -25,6 +25,12 @@ Route::group(['prefix' => 'home'], function () {
     Route::get('/index', 'IndexController@index')->name('home.index');
     //首页右边两个列表显示
     Route::get('/index-other', 'IndexController@articleOther')->name('home.articleOther');
+    //首页获取单个文章的信息
+    Route::get('/oneart/{id}', 'IndexController@articleMsg')->name('home.oneart');
+    //获取单个article下面的评论
+    Route::get('/artcom/{id}', 'IndexController@articleComent')->name('home.artcom');
+    //获取单个article下面单个评论的回复
+    Route::get('/artreply/{id}', 'IndexController@articleReply')->name('home.artreply');
 
 });
 Route::group(['middleware' => ['checktoken'],'prefix' => 'opera'],function () {
