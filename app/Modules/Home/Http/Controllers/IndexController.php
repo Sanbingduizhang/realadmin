@@ -197,10 +197,21 @@ class IndexController extends ApiBaseController
             ->where([
                 'articleid' => $id,
                 'is_del' => ArticleComment::IS_DEL_OFF,
-            ])
+            ])->toSql()
 //            ->get()->toArray();
 
             ->paginate($pageline)->toArray();
+
+//        dd(getUser($request));
+        $is_me = 3;
+
+        if (empty(getUser($request))) {
+
+        }
+        foreach ($comRes['data'] as $ck => $cv) {
+
+        }
+
 
         dd($comRes);
 
