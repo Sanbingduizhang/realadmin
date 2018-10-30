@@ -153,7 +153,7 @@ class IndexController extends ApiBaseController
                 'is_del' => Article::DEL_ON,
                 'id' => $id
             ])
-            ->select(['id', 'userid', 'cateid', 'content', 'like', 'pv', 'is_rec', 'wordsnum'])
+            ->select(['id', 'userid', 'cateid', 'content', 'like', 'pv', 'is_rec', 'wordsnum', 'created_at', 'updated_at'])
             ->first();
 
         //判断
@@ -171,7 +171,14 @@ class IndexController extends ApiBaseController
         //返回数据
         return response_success($returnArr);
     }
-    public function articleComent(Request $request,$id)
+
+    /**
+     * 获取单个article下方的评论(如果用户登录且有其评论则显示删除)
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function articleComent(Request $request, $id)
     {
         //获取相关数据
         $id = (int)$id;
@@ -182,7 +189,7 @@ class IndexController extends ApiBaseController
                 'publish' => Article::PUBLISH_ON,
                 'status' => Article::STATUS_ON,
                 'is_del' => Article::DEL_ON,
-                'id' => $id
+                'id' => $id,
             ])->first();
         //判断
         if (empty($findArRes)) {
@@ -191,31 +198,31 @@ class IndexController extends ApiBaseController
         //分页查找评论
         $comRes = $this->articleComRep
             ->with(['com_user' => function ($cu) {
-                $cu->select(['id','name']);
+                $cu->select(['id', 'name']);
             }])
             ->withCount(['com_reply'])
             ->where([
                 'articleid' => $id,
                 'is_del' => ArticleComment::IS_DEL_OFF,
-            ])->toSql()
-//            ->get()->toArray();
-
+            ])
             ->paginate($pageline)->toArray();
+        //定义是否时当前用户，默认不是
+        $is_me = -1;
 
-//        dd(getUser($request));
-        $is_me = 3;
-
-        if (empty(getUser($request))) {
-
+        //如果用户登录就去判断是否有评论时当前用户
+        if (!empty(getUser($request))) {
+            $is_me = getUser($request)['id'];
         }
+        //数据整合
         foreach ($comRes['data'] as $ck => $cv) {
-
+            $comRes['data'][$ck]['is_me'] = $cv['userid'] == $is_me ? true : false;
+            $comRes['data'][$ck]['com_user'] = $cv['com_user']['name'];
         }
 
-
-        dd($comRes);
+        return response_success(pageGo($comRes));
 
     }
+
     public function articleReply($id)
     {
 

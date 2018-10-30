@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 //     // return $request->home();
 // })->middleware('auth:api');
 
-Route::group(['prefix' => 'home'], function () {
+Route::group(['middleware' => ['checktokenorno'],'prefix' => 'home'], function () {
     //获取cate分类
     Route::get('/cate', 'IndexController@cate')->name('home.cate');
     //首页列表显示
