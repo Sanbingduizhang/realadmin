@@ -20,5 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['checktoken'],'prefix' => 'admin'],function () {
     //发布内容
     Route::get('/index', 'AArticleController@index')->name('admin.index');
+    //删除文章
+    Route::post('/ar/del', 'AArticleController@delar')->name('admin.delar');
 });
 
