@@ -38,5 +38,13 @@ class ArticleRepository extends BaseRepository
         }
         return $options;
     }
+    public function ardel(Request $request)
+    {
+        $idArr = $request->get('idArr',[]);
+        if (empty($idArr) || !is_array($idArr)) {
+            throw new \Exception('请传入相关参数');
+        }
+        return $idArr;
+    }
 
 }

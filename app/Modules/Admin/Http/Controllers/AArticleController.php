@@ -8,10 +8,12 @@ use App\Modules\Base\Repositories\ArticleRepository;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class AArticleController extends ApiBaseController
 {
     protected $articleRepository;
+
     public function __construct(ArticleRepository $articleRepository)
     {
         $this->articleRepository = $articleRepository;
@@ -24,13 +26,13 @@ class AArticleController extends ApiBaseController
      */
     public function index(Request $request)
     {
-        $line = $request->get('line',15);
-        $order = $request->get('order','DESC');
+        $line = $request->get('line', 15);
+        $order = $request->get('order', 'DESC');
         //相关条件
-        $rec = $request->get('rec',0);
-        $pub = $request->get('pub',0);
-        $sh = $request->get('sh',0);
-        $words = $request->get('words','');
+        $rec = $request->get('rec', 0);
+        $pub = $request->get('pub', 0);
+        $sh = $request->get('sh', 0);
+        $words = $request->get('words', '');
         $users = getUser($request);
         $this->articleRepository = $this->articleRepository
             ->where([
@@ -38,32 +40,32 @@ class AArticleController extends ApiBaseController
                 'is_del' => Article::DEL_ON,
             ]);
         //是否推荐  1-推荐  2-不推荐
-        if ((!empty($rec) || $rec != 0) && in_array($rec,[1,2])) {
+        if ((!empty($rec) || $rec != 0) && in_array($rec, [1, 2])) {
             $this->articleRepository = $this->articleRepository
                 ->where(['is_rec' => $rec]);
         }
         //是否发布 1-发布  2-不发布
-        if ((!empty($pub) || $pub != 0) && in_array($pub,[1,2])) {
+        if ((!empty($pub) || $pub != 0) && in_array($pub, [1, 2])) {
             $this->articleRepository = $this->articleRepository
                 ->where(['publish' => $pub]);
         }
         //是否审核 1-审核  2-不审核
-        if ((!empty($sh) || $sh != 0) && in_array($sh,[1,2])) {
+        if ((!empty($sh) || $sh != 0) && in_array($sh, [1, 2])) {
             $this->articleRepository = $this->articleRepository
                 ->where(['status' => $sh]);
         }
         //是否关键字查询
         if (!empty($words)) {
             $this->articleRepository = $this->articleRepository
-                ->where('content','like',"%$words%");
+                ->where('content', 'like', "%$words%");
         }
 
         $articleRes = $this->articleRepository
             ->with(['article_cate' => function ($ac) {
-                $ac->select(['id','name']);
+                $ac->select(['id', 'name']);
             }])
-            ->select(['id','content','cateid','publish','like','pv','is_rec','status'])
-            ->orderBy('updated_at',$order)
+            ->select(['id', 'content', 'cateid', 'publish', 'like', 'pv', 'is_rec', 'status'])
+            ->orderBy('updated_at', $order)
             ->paginate($line)
             ->toArray();
 
@@ -76,5 +78,25 @@ class AArticleController extends ApiBaseController
         }
 
         return response_success(pageGo($articleRes));
+    }
+
+    /**
+     * 删除文章
+     * 支持多个删除
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delar(Request $request)
+    {
+        $user = getUser($request);
+        $options = $this->articleRepository->ardel($request);
+        $delRes = $this->articleRepository
+            ->where(['userid' => $user['id']])
+            ->whereIn('id', $options)
+            ->update(['is_del' => -1]);
+        if ($delRes) {
+            return response_success(['message' => '删除成功']);
+        }
+        return response_failed('删除失败');
     }
 }
