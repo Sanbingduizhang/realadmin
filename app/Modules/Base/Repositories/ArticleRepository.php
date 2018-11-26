@@ -40,6 +40,24 @@ class ArticleRepository extends BaseRepository
     }
 
     /**
+     * 显示获取
+     * @param Request $request
+     * @return array
+     */
+    public function arindex(Request $request)
+    {
+        return [
+            'line' => $request->get('line', 15),
+            'order' => $request->get('order', 'DESC'),
+            //相关条件
+            'rec' => $request->get('rec', 0),
+            'pub' => $request->get('pu', 0),
+            'shen' => $request->get('shen', 0),
+            'words' => rawurldecode($request->get('words', '')),
+        ];
+    }
+
+    /**
      * 删除传递参数   array()
      * @param Request $request
      * @return array()
