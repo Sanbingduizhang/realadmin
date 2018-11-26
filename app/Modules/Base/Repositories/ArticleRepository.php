@@ -38,6 +38,13 @@ class ArticleRepository extends BaseRepository
         }
         return $options;
     }
+
+    /**
+     * 删除传递参数   array()
+     * @param Request $request
+     * @return array()
+     * @throws \Exception
+     */
     public function ardel(Request $request)
     {
         $idArr = $request->get('idArr',[]);
@@ -45,6 +52,21 @@ class ArticleRepository extends BaseRepository
             throw new \Exception('请传入相关参数');
         }
         return $idArr;
+    }
+
+    /**
+     * 上下架传递参数，仅允许传入单个
+     * @param Request $request
+     * @return int
+     * @throws \Exception
+     */
+    public function arsxj(Request $request)
+    {
+        $id = (int)$request->get('id');
+        if (!is_numeric($id)) {
+            throw new \Exception('请传入正确相关参数');
+        }
+        return $id;
     }
 
 }

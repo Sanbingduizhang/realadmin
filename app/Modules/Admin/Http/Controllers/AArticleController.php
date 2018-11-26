@@ -30,9 +30,10 @@ class AArticleController extends ApiBaseController
         $order = $request->get('order', 'DESC');
         //相关条件
         $rec = $request->get('rec', 0);
-        $pub = $request->get('pub', 0);
-        $sh = $request->get('sh', 0);
-        $words = $request->get('words', '');
+        $pub = $request->get('pu', 0);
+        $sh = $request->get('shen', 0);
+        $words = rawurldecode($request->get('words', ''));
+        
         $users = getUser($request);
         $this->articleRepository = $this->articleRepository
             ->where([
@@ -98,5 +99,34 @@ class AArticleController extends ApiBaseController
             return response_success(['message' => '删除成功']);
         }
         return response_failed('删除失败');
+    }
+
+    /**
+     * 文章上下架
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sxjar(Request $request)
+    {
+        $user = getUser($request);
+        $options = $this->articleRepository->arsxj($request);
+        $sxjRes = $this->articleRepository
+            ->where([
+                'userid' => $user['id'],
+                'is_del' => 1,
+                'id'     => $options,
+            ])->first();
+        if (!$sxjRes) {
+            return response_failed(['message' => '数据有误']);
+        }
+        $update = $sxjRes->publish == Article::PUBLISH_ON ? Article::PUBLISH_OFF : Article::PUBLISH_ON;
+        $updateRes = $sxjRes->update(['publish' => $update]);
+        if ($updateRes) {
+            return response_success([
+                'sxj' => $update == Article::PUBLISH_ON ? '下架' : '上架',
+                'pub' => $update == Article::PUBLISH_ON ? '已发布' : '未发布',
+            ]);
+        }
+        return response_failed('修改失败');
     }
 }

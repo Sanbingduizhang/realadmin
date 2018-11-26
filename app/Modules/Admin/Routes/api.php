@@ -22,5 +22,7 @@ Route::group(['middleware' => ['checktoken'],'prefix' => 'admin'],function () {
     Route::get('/index', 'AArticleController@index')->name('admin.index');
     //删除文章
     Route::post('/ar/del', 'AArticleController@delar')->name('admin.delar');
+    //文章的上下架
+    Route::post('/ar/sxj', 'AArticleController@sxjar')->name('admin.sxjar');
 });
 
