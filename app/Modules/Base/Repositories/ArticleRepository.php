@@ -22,19 +22,23 @@ class ArticleRepository extends BaseRepository
 
     /**
      * 获取发布内容的信息
-     * @param ArticleRequest $request
+     * @param Request $request
      * @return array
      */
-    public function getAddText($request)
+    public function getAddText(Request $request)
     {
         $options = [
             'cateid' => $request->get('cate',1),
+            'publish' => $request->get('pub',2),
             'content' => $request->get('text',''),
             'wordsnum' => $request->get('wordscount',0),
         ];
         //如果没传字数，则此处自己计算
         if ($options['wordsnum'] == 0) {
-            $options['wordsnum'] = strlen($options['content']);
+            $options['wordsnum'] = mb_strlen($options['content']);
+            if ($options['wordsnum'] < 10) {
+                throw new \Exception("您最少输入10个字符");
+            }
         }
         return $options;
     }

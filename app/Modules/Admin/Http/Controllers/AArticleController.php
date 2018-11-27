@@ -5,6 +5,7 @@ namespace App\Modules\Admin\Http\Controllers;
 use App\Modules\Base\Http\Controllers\ApiBaseController;
 use App\Modules\Base\Models\Article;
 use App\Modules\Base\Repositories\ArticleRepository;
+use App\Modules\Base\Repositories\CategoryRepository;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
@@ -13,10 +14,12 @@ use Illuminate\Support\Facades\DB;
 class AArticleController extends ApiBaseController
 {
     protected $articleRepository;
+    protected $categoryRepository;
 
-    public function __construct(ArticleRepository $articleRepository)
+    public function __construct(ArticleRepository $articleRepository, CategoryRepository $categoryRepository)
     {
         $this->articleRepository = $articleRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -51,7 +54,7 @@ class AArticleController extends ApiBaseController
         //是否关键字查询
         if (!empty($options['words'])) {
             $this->articleRepository = $this->articleRepository
-                ->where('content', 'like', '%'.$options['words'].'%');
+                ->where('content', 'like', '%' . $options['words'] . '%');
         }
 
         $articleRes = $this->articleRepository
@@ -107,7 +110,7 @@ class AArticleController extends ApiBaseController
             ->where([
                 'userid' => $user['id'],
                 'is_del' => 1,
-                'id'     => $options,
+                'id' => $options,
             ])->first();
         if (!$sxjRes) {
             return response_failed(['message' => '数据有误']);
@@ -121,5 +124,53 @@ class AArticleController extends ApiBaseController
             ]);
         }
         return response_failed('修改失败');
+    }
+
+    /**
+     * 添加发布内容
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function pubar(Request $request)
+    {
+        $options = $this->articleRepository->getAddText($request);
+        $cateArr = $this->getCates(1);
+        //判断分类选择正确与否
+        if (!in_array($options['cateid'], $cateArr)) {
+            return response_failed('分类选择错误');
+        }
+        //判断是否发布的选择
+        if (!in_array($options['publish'], [1, 2])) {
+            return response_failed('数据参数错误');
+        }
+        //获取当前登陆用户
+        $users = getUser($request);
+        //整合需要插入的数据
+        $options['userid'] = $users['id'];
+
+        $createRes = $this->articleRepository->create($options);
+        if (!$createRes) {
+            return response_failed('添加失败');
+        }
+        return response_success(['message' => '添加成功']);
+    }
+
+    /**
+     * 获取所有可用可输入的文本
+     * @param int $type 1-获取id 2-获取name 其他获取id和name
+     * @return array
+     */
+    private function getCates($type = 3)
+    {
+        $cateRes = $this->categoryRepository
+            ->select(['id', 'name'])
+            ->where(['is_del' => 1, 'type' => 1])
+            ->get()->toArray();
+        if ($type == 1) {
+            return array_column($cateRes, 'id');
+        } elseif ($type == 2) {
+            return array_column($cateRes, 'name');
+        }
+        return $cateRes;
     }
 }
