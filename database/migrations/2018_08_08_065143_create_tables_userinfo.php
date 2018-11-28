@@ -29,11 +29,14 @@ class CreateTablesUserinfo extends Migration
                 $table->integer('iphone')->nullable()->default(NULL)->comment('手机');
                 $table->string('birthday')->nullable()->default(NULL)->comment('生日');
                 $table->integer('sex')->nullable()->default(3)->comment('性别1-男2-女3-未知');
-                $table->integer('status')->default(1)->comment('状态-1-使用2-禁用-3-删除');
+                $table->integer('status')->default(1)->comment('状态—— -1-永久封停1-使用2-禁用-3-删除');
                 $table->string('name')->nullable()->default('匿名')->comment('用户名称');
                 $table->smallInteger('type')->nullable()->default(5)->comment('0-超级管理员1-管理员2-高级会员3-超级会员4-顶级会员5-会员');
+                $table->smallInteger('caveat')->nullable()->default(0)->comment('警告次数，3次直接封停账号');
+                $table->smallInteger('banned')->nullable()->default(0)->comment('封停次数，3次直接永久封禁');
                 $table->dateTime('created_at')->comment('创建于');
                 $table->dateTime('updated_at')->comment('更新于');
+                $table->dateTime('caveat_at')->comment('警告时间');
             });
         }
 

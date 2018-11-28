@@ -115,7 +115,6 @@ if (!function_exists('get_or_check_captcha')) {
     }
 }
 
-
 if (!function_exists('uploadsFile')) {
     function uploadsFile($request, $arr = array())
     {
@@ -206,5 +205,21 @@ if (!function_exists('uploadsFile')) {
             ];
         }
         return $options;
+    }
+}
+
+if (!function_exists('datetime_gap')) {
+    /**
+     * 获取时间间隔差值的分钟数
+     * @param $ss   2018-01-01 00:00:00
+     * @param $ee   2018-01-01 00:00:00
+     * @return int -1或者分钟数
+     */
+    function datetime_gap($ss,$ee)
+    {
+        if (strtotime($ss) >= strtotime($ee)) {
+            return intval(ceil(abs(strtotime($ss) - strtotime($ee)) / 60));
+        }
+        return -1;
     }
 }

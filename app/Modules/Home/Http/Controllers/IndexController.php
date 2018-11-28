@@ -122,7 +122,10 @@ class IndexController extends ApiBaseController
         $articleRes = $this->articleRepository
             ->select(['id', 'content', 'updated_at'])
             ->where([
+                'status' => Article::STATUS_ON,
+                'is_pv_use' => Article::PV_USE_ALL,
                 'is_del' => Article::DEL_ON,
+                'publish' => Article::PUBLISH_ON,
                 'userid' => $user['id'],
             ])
             ->orderBy('updated_at', 'DESC')
