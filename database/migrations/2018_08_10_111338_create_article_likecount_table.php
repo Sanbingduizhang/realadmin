@@ -26,6 +26,7 @@ class CreateArticleLikecountTable extends Migration
                 $table->integer('pid')->comment('文章相关的图片，评论，回复id');
                 $table->smallInteger('likego')->nullable()->default(1)->comment('是否点赞1-点赞2-取消赞（直接删除');
                 $table->smallInteger('type')->nullable()->default(1)->comment('1-文章，2-文章评论，3-文章回复');
+                $table->smallInteger('fromuid')->comment('文章，评论，回复所属的作者id');
                 $table->dateTime('created_at')->nullable()->comment('创建于');
                 $table->dateTime('updated_at')->nullable()->comment('更新于');
             });
