@@ -208,6 +208,7 @@ class IndexController extends ApiBaseController
                 'articleid' => $id,
                 'is_del' => ArticleComment::IS_DEL_OFF,
             ])
+            ->orderBy('created_at','desc')
             ->paginate($pageline)->toArray();
         //定义是否时当前用户，默认不是
         $is_me = -1;

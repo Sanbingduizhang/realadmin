@@ -36,4 +36,9 @@ Route::group(['middleware' => ['checktokenorno'],'prefix' => 'home'], function (
 Route::group(['middleware' => ['checktoken'],'prefix' => 'opera'],function () {
     //获取个人未删除作品，在前台页面显示
     Route::get('/my-contents', 'IndexController@myArticles')->name('home.myArticles');
+    //文章评论添加
+    Route::post('/arcomadd', 'CommentController@arcomadd')->name('home.arcomadd');
+    //文章评论删除
+    Route::post('/arcomdel', 'CommentController@arcomdel')->name('home.arcomdel');
+
 });
