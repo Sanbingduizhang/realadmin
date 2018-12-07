@@ -89,9 +89,4 @@ class CommentController extends ApiBaseController
         }
         return response_failed('删除失败');
     }
-
-    public function likego()
-    {
-
-    }
 }

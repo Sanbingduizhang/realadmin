@@ -40,5 +40,7 @@ Route::group(['middleware' => ['checktoken'],'prefix' => 'opera'],function () {
     Route::post('/arcomadd', 'CommentController@arcomadd')->name('home.arcomadd');
     //文章评论删除
     Route::post('/arcomdel', 'CommentController@arcomdel')->name('home.arcomdel');
+    //点赞和取消赞等
+    Route::post('/likego', 'LikeController@likego')->name('home.likego');
 
 });
