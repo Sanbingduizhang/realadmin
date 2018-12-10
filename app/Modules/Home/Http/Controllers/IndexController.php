@@ -6,6 +6,7 @@ use App\Modules\Base\Models\Article;
 use App\Modules\Base\Models\ArticleComment;
 use App\Modules\Base\Models\Category;
 use App\Modules\Base\Repositories\ArticleCommentRepository;
+use App\Modules\Base\Repositories\ArticleLikeRepository;
 use App\Modules\Base\Repositories\ArticleReplyRepository;
 use App\Modules\Base\Repositories\ArticleRepository;
 use App\Modules\Base\Repositories\CategoryRepository;
@@ -19,19 +20,22 @@ class IndexController extends ApiBaseController
     protected $articleRepository;
     protected $articleComRep;
     protected $articleReplyRep;
+    protected $arLikeRepository;
 
 
     public function __construct(
         CategoryRepository $categoryRepository,
         ArticleRepository $articleRepository,
         ArticleCommentRepository $articleComRep,
-        ArticleReplyRepository $articleReplyRep
+        ArticleReplyRepository $articleReplyRep,
+        ArticleLikeRepository $arLikeRepository
     )
     {
         $this->categoryRepository = $categoryRepository;
         $this->articleRepository = $articleRepository;
         $this->articleComRep = $articleComRep;
         $this->articleReplyRep = $articleReplyRep;
+        $this->arLikeRepository = $arLikeRepository;
 
     }
 
@@ -203,7 +207,7 @@ class IndexController extends ApiBaseController
             ->with(['com_user' => function ($cu) {
                 $cu->select(['id', 'name']);
             }])
-            ->withCount(['com_reply'])
+//            ->withCount(['com_reply'])
             ->where([
                 'articleid' => $id,
                 'is_del' => ArticleComment::IS_DEL_OFF,
@@ -213,13 +217,19 @@ class IndexController extends ApiBaseController
         //定义是否时当前用户，默认不是
         $is_me = -1;
 
+        if (empty($comRes['data'])) {
+            return response_success(pageGo($comRes));
+        }
         //如果用户登录就去判断是否有评论时当前用户
         if (!empty(getUser($request))) {
             $is_me = getUser($request)['id'];
+            $idArr = array_column($comRes['data'],'id');
+            $likeArr = $this->myselfLike(getUser($request)['id'],2,$idArr);
         }
         //数据整合
         foreach ($comRes['data'] as $ck => $cv) {
             $comRes['data'][$ck]['is_me'] = $cv['userid'] == $is_me ? true : false;
+            $comRes['data'][$ck]['is_like'] = isset($likeArr[$cv['id']]) ? true : false;
             $comRes['data'][$ck]['com_user'] = $cv['com_user']['name'];
         }
 
@@ -230,5 +240,30 @@ class IndexController extends ApiBaseController
     public function articleReply($id)
     {
 
+    }
+
+    /**
+     * 自调用格式化回复内容
+     * @param $userid
+     * @param int $type
+     * @param $idArr
+     * @return array
+     */
+    private function myselfLike($userid,$type = 1,$idArr)
+    {
+        $findRes = $this->arLikeRepository
+            ->where([
+                'type' => $type,
+                'userid' => $userid,
+            ])->whereIn('pid',$idArr)->get();
+        if (count($findRes) == 0) {
+            return [];
+        }
+        //遍历格式化结果
+        $return = [];
+        foreach ($findRes->toArray() as $k => $v) {
+            $return[$v['pid']] = true;
+        }
+        return $return;
     }
 }

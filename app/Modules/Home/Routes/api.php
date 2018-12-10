@@ -40,6 +40,10 @@ Route::group(['middleware' => ['checktoken'],'prefix' => 'opera'],function () {
     Route::post('/arcomadd', 'CommentController@arcomadd')->name('home.arcomadd');
     //文章评论删除
     Route::post('/arcomdel', 'CommentController@arcomdel')->name('home.arcomdel');
+    //文章评论回复添加
+    Route::post('/arrepadd', 'CommentController@arrepadd')->name('home.arrepadd');
+    //文章评论回复删除
+    Route::post('/arrepdel', 'CommentController@arrepdel')->name('home.arrepdel');
     //点赞和取消赞等
     Route::post('/likego', 'LikeController@likego')->name('home.likego');
 

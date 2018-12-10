@@ -10,7 +10,6 @@ use App\Modules\Base\Repositories\ArticleRepository;
 use App\Modules\Base\Repositories\CategoryRepository;
 use Illuminate\Http\Request;
 
-use App\Http\Controllers\Controller;
 
 class CommentController extends ApiBaseController
 {
