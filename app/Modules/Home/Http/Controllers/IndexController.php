@@ -4,6 +4,7 @@ namespace App\Modules\Home\Http\Controllers;
 
 use App\Modules\Base\Models\Article;
 use App\Modules\Base\Models\ArticleComment;
+use App\Modules\Base\Models\ArticleReply;
 use App\Modules\Base\Models\Category;
 use App\Modules\Base\Repositories\ArticleCommentRepository;
 use App\Modules\Base\Repositories\ArticleLikeRepository;
@@ -207,7 +208,7 @@ class IndexController extends ApiBaseController
             ->with(['com_user' => function ($cu) {
                 $cu->select(['id', 'name']);
             }])
-//            ->withCount(['com_reply'])
+            ->withCount(['com_reply'])
             ->where([
                 'articleid' => $id,
                 'is_del' => ArticleComment::IS_DEL_OFF,
@@ -231,14 +232,68 @@ class IndexController extends ApiBaseController
             $comRes['data'][$ck]['is_me'] = $cv['userid'] == $is_me ? true : false;
             $comRes['data'][$ck]['is_like'] = isset($likeArr[$cv['id']]) ? true : false;
             $comRes['data'][$ck]['com_user'] = $cv['com_user']['name'];
+            $comRes['data'][$ck]['replynum'] = $cv['com_reply_count'];
         }
 
         return response_success(pageGo($comRes));
 
     }
 
-    public function articleReply($id)
+    public function articleReply(Request $request,$id)
     {
+        //获取相关数据
+        $id = (int)$id;
+        $pageline = (int)$request->get('line', 6);
+
+        $findComRes = $this->articleComRep
+            ->where([
+                'is_del' => ArticleComment::IS_DEL_OFF,
+                'id' => $id,
+            ])->first();
+        //判断
+        if (empty($findComRes)) {
+            return response_failed('数据获取失败');
+        }
+        //分页查找评论
+        $repRes = $this->articleReplyRep
+            ->with(['reply_user' => function ($cu) {
+                $cu->select(['id', 'name']);
+            }])
+            ->with(['pid_arply' => function ($cu) {
+                $cu->select(['id', 'userid'])
+                    ->with(['reply_user' => function ($cu) {
+                        $cu->select(['id', 'name']);
+                    }]);
+            }])
+            ->where([
+                'acomid' => $id,
+                'is_del' => ArticleReply::IS_DEL_OFF,
+            ])
+            ->orderBy('created_at','desc')
+            ->paginate($pageline)->toArray();
+        //定义是否时当前用户，默认不是
+        $is_me = -1;
+
+        if (empty($repRes['data'])) {
+            return response_success(pageGo($repRes));
+        }
+        //如果用户登录就去判断是否有评论时当前用户
+        if (!empty(getUser($request))) {
+            $is_me = getUser($request)['id'];
+            $idArr = array_column($repRes['data'],'id');
+            $likeArr = $this->myselfLike(getUser($request)['id'],3,$idArr);
+        }
+        //数据整合
+        foreach ($repRes['data'] as $ck => $cv) {
+            $repRes['data'][$ck]['is_me'] = $cv['userid'] == $is_me ? true : false;
+            $repRes['data'][$ck]['is_like'] = isset($likeArr[$cv['id']]) ? true : false;
+            if (!empty($cv['pid_arply'])) {
+                $repRes['data'][$ck]['pid_arply'] = $cv['pid_arply']['reply_user'];
+            }
+//            $repRes['data'][$ck]['com_user'] = $cv['com_user']['name'];
+        }
+
+        return response_success(pageGo($repRes));
 
     }
 
