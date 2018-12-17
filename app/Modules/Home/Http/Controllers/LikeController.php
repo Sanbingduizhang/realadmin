@@ -46,7 +46,7 @@ class LikeController extends Controller
     {
         $user = getUser($request);
         $arid = (int)$request->get('arid',0);
-        $type = (int)$request->get('type',0);
+        $type = (int)$request->get('type',0);   //type=1是文章,2-评论,3-回复
         if (empty($arid) || empty($type) || !in_array($type,[1,2,3])) {
             return response_failed('请传入相关参数');
         }
