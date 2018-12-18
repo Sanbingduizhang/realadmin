@@ -243,7 +243,7 @@ class IndexController extends ApiBaseController
     {
         //获取相关数据
         $id = (int)$id;
-        $pageline = (int)$request->get('line', 6);
+        $pageline = (int)$request->get('line', 10);
 
         $findComRes = $this->articleComRep
             ->where([

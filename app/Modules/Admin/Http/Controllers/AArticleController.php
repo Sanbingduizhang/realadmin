@@ -49,7 +49,7 @@ class AArticleController extends ApiBaseController
         //是否审核 1-审核  2-不审核
         if ((!empty($options['shen']) || $options['shen'] != 0) && in_array($options['shen'], [1, 2])) {
             $this->articleRepository = $this->articleRepository
-                ->where(['status' => $options['pub']]);
+                ->where(['status' => $options['shen']]);
         }
         //是否关键字查询
         if (!empty($options['words'])) {
