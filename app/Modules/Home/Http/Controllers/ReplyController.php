@@ -35,8 +35,6 @@ class ReplyController extends ApiBaseController
      */
     public function arrepadd(Request $request)
     {
-        $arcid = (int)$request->get('arcid',0);
-        $type = (int)$request->get('type',1);    //1-评论的回复  2-回复的回复
         $option = $this->arReplyRepository->arcaoption($request);
         if (empty($option['arcid']) || empty($option['type']) || !in_array($option['type'],[1,2])) {
             return response_failed('请传入相关参数');
@@ -45,19 +43,19 @@ class ReplyController extends ApiBaseController
         $findRes = $this->arComRepository
             ->where([
                 'is_del' => ArticleComment::IS_DEL_OFF,
-                'id' => $arcid,
+                'id' => $option['arcid'],
             ])->first();
 
         if (empty($findRes)) {
             return response_failed('数据有误');
         }
         //开始添加回复内容
-        if ($type == 1) {
+        if ($option['type'] == 1) {
             //添加评论的回复
             $addRes = $this->arReplyRepository->create([
                 'userid' => getUser($request)['id'],
                 'content' => $option['content'],
-                'acomid' => $arcid,
+                'acomid' => $option['arcid'],
             ]);
         } else {
             if (empty($option['pid'])) {
@@ -67,7 +65,7 @@ class ReplyController extends ApiBaseController
             $addRes = $this->arReplyRepository->create([
                 'userid' => getUser($request)['id'],
                 'content' => $option['content'],
-                'acomid' => $arcid,
+                'acomid' => $option['arcid'],
                 'pid' => $option['pid'],
             ]);
         }
