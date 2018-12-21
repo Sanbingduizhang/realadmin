@@ -30,8 +30,8 @@ class ArticleReplyRepository extends BaseRepository
         if (empty($content)) {
             throw new \Exception("请输入回复内容");
         }
-        if (mb_strlen($content) < 5 || mb_strlen($content) > 100) {
-            throw new \Exception("请输入5到100个相关字符");
+        if (mb_strlen($content) > 100) {
+            throw new \Exception("请输入少于100个相关字符");
         }
         $options = [
             'arcid' => (int)$request->get('arcid',0),
