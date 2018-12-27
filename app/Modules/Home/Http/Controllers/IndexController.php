@@ -68,9 +68,12 @@ class IndexController extends ApiBaseController
             ->with(['article_cate' => function ($ac) {
                 $ac->select(['id', 'name']);
             }])
-            ->with((['article_user' => function ($au) {
+            ->with(['article_user' => function ($au) {
                 $au->select(['id', 'name']);
-            }]))
+            }])
+            ->withCount(['article_com' => function ($acom) {
+                $acom->where(['is_del' => ArticleComment::IS_DEL_OFF]);
+            }])
             ->where([
                 'status' => Article::STATUS_ON,
                 'is_pv_use' => Article::PV_USE_ALL,
@@ -144,7 +147,7 @@ class IndexController extends ApiBaseController
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function articleMsg($id)
+    public function articleMsg(Request $request,$id)
     {
         //相关sql
         $id = (int)$id;
@@ -168,11 +171,24 @@ class IndexController extends ApiBaseController
         if (empty($articeExist)) {
             return response_failed('数据获取失败');
         }
+        //获取评论数
+        $arcomCount = $this->articleComRep
+            ->where([
+                'articleid' => $id,
+                'is_del' => ArticleComment::IS_DEL_OFF,
+                ])->count();
+        //获取是否是自己点赞
+        //如果用户登录就去判断是否有评论时当前用户
+        if (!empty(getUser($request))) {
+            $likeArr = $this->myselfLike(getUser($request)['id'], 1, [$id]);
+        }
         //整合数据
         $returnArr = $articeExist->toArray();
         $returnArr['arcatename'] = $returnArr['article_cate']['name'];
         $returnArr['arusername'] = $returnArr['article_user']['name'];
         $returnArr['is_rec'] = $returnArr['is_rec'] == 1 ? '推荐' : '不推荐';
+        $returnArr['pv'] = $arcomCount;
+        $returnArr['is_like'] = isset($likeArr[$returnArr['id']]) ? true : false;
         unset($returnArr['article_cate']);
         unset($returnArr['article_user']);
 
@@ -213,7 +229,7 @@ class IndexController extends ApiBaseController
                 'articleid' => $id,
                 'is_del' => ArticleComment::IS_DEL_OFF,
             ])
-            ->orderBy('created_at','desc')
+            ->orderBy('created_at', 'desc')
             ->paginate($pageline)->toArray();
         //定义是否时当前用户，默认不是
         $is_me = -1;
@@ -224,8 +240,8 @@ class IndexController extends ApiBaseController
         //如果用户登录就去判断是否有评论时当前用户
         if (!empty(getUser($request))) {
             $is_me = getUser($request)['id'];
-            $idArr = array_column($comRes['data'],'id');
-            $likeArr = $this->myselfLike(getUser($request)['id'],2,$idArr);
+            $idArr = array_column($comRes['data'], 'id');
+            $likeArr = $this->myselfLike(getUser($request)['id'], 2, $idArr);
         }
         //数据整合
         foreach ($comRes['data'] as $ck => $cv) {
@@ -239,7 +255,7 @@ class IndexController extends ApiBaseController
 
     }
 
-    public function articleReply(Request $request,$id)
+    public function articleReply(Request $request, $id)
     {
         //获取相关数据
         $id = (int)$id;
@@ -269,7 +285,7 @@ class IndexController extends ApiBaseController
                 'acomid' => $id,
                 'is_del' => ArticleReply::IS_DEL_OFF,
             ])
-            ->orderBy('created_at','desc')
+            ->orderBy('created_at', 'desc')
             ->paginate($pageline)->toArray();
         //定义是否时当前用户，默认不是
         $is_me = -1;
@@ -280,8 +296,8 @@ class IndexController extends ApiBaseController
         //如果用户登录就去判断是否有评论时当前用户
         if (!empty(getUser($request))) {
             $is_me = getUser($request)['id'];
-            $idArr = array_column($repRes['data'],'id');
-            $likeArr = $this->myselfLike(getUser($request)['id'],3,$idArr);
+            $idArr = array_column($repRes['data'], 'id');
+            $likeArr = $this->myselfLike(getUser($request)['id'], 3, $idArr);
         }
         //数据整合
         foreach ($repRes['data'] as $ck => $cv) {
@@ -304,13 +320,13 @@ class IndexController extends ApiBaseController
      * @param $idArr
      * @return array
      */
-    public function myselfLike($userid,$type = 1,$idArr)
+    public function myselfLike($userid, $type = 1, $idArr)
     {
         $findRes = $this->arLikeRepository
             ->where([
                 'type' => $type,
                 'userid' => $userid,
-            ])->whereIn('pid',$idArr)->get();
+            ])->whereIn('pid', $idArr)->get();
         if (count($findRes) == 0) {
             return [];
         }

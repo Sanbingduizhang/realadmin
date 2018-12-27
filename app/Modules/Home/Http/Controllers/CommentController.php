@@ -51,10 +51,46 @@ class CommentController extends ApiBaseController
             'content' => $options['content'],
         ];
         $insertRes = $this->arComRepository->create($insertData);
+
         if ($insertRes) {
-            return response_success(['message' => '评论成功']);
+            $returnRes = $this->comId($request,$insertRes->id);
+            return response_success($returnRes);
         }
         return response_failed('评论失败');
+    }
+
+
+    private function comId($request,$comid)
+    {
+        $comRes = $this->arComRepository
+            ->with(['com_user' => function ($cu) {
+                $cu->select(['id', 'name']);
+            }])
+            ->withCount(['com_reply'])
+            ->where([
+                'id' => $comid,
+                'is_del' => ArticleComment::IS_DEL_OFF,
+            ])->first();
+
+        //定义是否时当前用户，默认不是
+        $is_me = -1;
+//dd($comRes);
+        if (empty($comRes)) {
+            return [];
+        }
+        $comRes = $comRes->toArray();
+        //如果用户登录就去判断是否有评论时当前用户
+        if (!empty(getUser($request))) {
+            $is_me = getUser($request)['id'];
+            $likeArr = app(IndexController::class)->myselfLike(getUser($request)['id'],2,[$comRes['id']]);
+        }
+        //数据整合
+        $comRes['is_me'] = $comRes['userid'] == $is_me ? true : false;
+        $comRes['is_like'] = isset($likeArr[$comRes['id']]) ? true : false;
+        $comRes['replynum'] = $comRes['com_reply_count'];
+        $comRes['com_user'] = $comRes['com_user']['name'];
+
+        return $comRes;
     }
 
     /**

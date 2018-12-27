@@ -36,4 +36,13 @@ class Article extends Model
     {
         return $this->belongsTo(UserInfo::class,'userid','id');
     }
+
+    /**
+     * 文章和评论关联(评论不包括回复)
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function article_com()
+    {
+        return $this->hasMany(ArticleComment::class,'articleid','id');
+    }
 }
