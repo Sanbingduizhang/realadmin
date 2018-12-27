@@ -85,6 +85,22 @@ class IndexController extends ApiBaseController
             ->orderBy('created_at', 'desc')
             ->paginate($pageline)->toArray();
 
+        if (empty($article['data'])) {
+            return response_success(pageGo($article));
+        }
+        $is_me = -1;
+        //如果用户登录就去判断是否有评论时当前用户
+        if (!empty(getUser($request))) {
+            $is_me = getUser($request)['id'];
+            $idArr = array_column($article['data'], 'id');
+            $likeArr = $this->myselfLike(getUser($request)['id'], 1, $idArr);
+        }
+        //数据整合
+        foreach ($article['data'] as $ck => $cv) {
+            $article['data'][$ck]['is_me'] = $cv['userid'] == $is_me ? true : false;
+            $article['data'][$ck]['is_like'] = isset($likeArr[$cv['id']]) ? true : false;
+        }
+
         return response_success(pageGo($article));
     }
 
