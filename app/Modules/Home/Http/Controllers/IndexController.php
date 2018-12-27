@@ -304,7 +304,7 @@ class IndexController extends ApiBaseController
      * @param $idArr
      * @return array
      */
-    private function myselfLike($userid,$type = 1,$idArr)
+    public function myselfLike($userid,$type = 1,$idArr)
     {
         $findRes = $this->arLikeRepository
             ->where([

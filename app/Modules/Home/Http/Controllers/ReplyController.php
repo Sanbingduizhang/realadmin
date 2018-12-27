@@ -69,10 +69,59 @@ class ReplyController extends ApiBaseController
                 'pid' => $option['pid'],
             ]);
         }
-        if ($addRes) {
-            return response_success(['message' => '添加成功']);
+        if (!$addRes) {
+            return response_failed('添加失败');
         }
-        return response_failed('添加失败');
+        //添加成功的话返回其他数据
+        $replyRes = $this->replyId($request,$addRes->id);
+
+        return response_success($replyRes);
+    }
+
+
+    /**
+     * 自调用格式化返回回复内容
+     * @param $request
+     * @param $replyid
+     * @return array
+     */
+    private function replyId($request,$replyid)
+    {
+        $repRes = $this->arReplyRepository
+            ->with(['reply_user' => function ($cu) {
+                $cu->select(['id', 'name']);
+            }])
+            ->with(['pid_arply' => function ($cu) {
+                $cu->select(['id', 'userid'])
+                    ->with(['reply_user' => function ($cu) {
+                        $cu->select(['id', 'name']);
+                    }]);
+            }])
+            ->where([
+                'id' => $replyid,
+                'is_del' => ArticleReply::IS_DEL_OFF,
+            ])->first();
+
+        //定义是否时当前用户，默认不是
+        $is_me = -1;
+
+        if (empty($repRes)) {
+            return [];
+        }
+        $repRes = $repRes->toArray();
+        //如果用户登录就去判断是否有评论时当前用户
+        if (!empty(getUser($request))) {
+            $is_me = getUser($request)['id'];
+            $likeArr = app(IndexController::class)->myselfLike(getUser($request)['id'],3,[$repRes['id']]);
+        }
+        //数据整合
+        $repRes['is_me'] = $repRes['userid'] == $is_me ? true : false;
+        $repRes['is_like'] = isset($likeArr[$repRes['id']]) ? true : false;
+        if (!empty($repRes['pid_arply'])) {
+            $repRes['pid_arply'] = $repRes['pid_arply']['reply_user'];
+        }
+
+        return $repRes;
     }
 
     /**
