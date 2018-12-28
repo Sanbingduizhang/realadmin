@@ -13,7 +13,7 @@ return [
     */
    
     'supportsCredentials' => false,
-    'allowedOrigins' => ['*'],
+    'allowedOrigins' => [env('CROS_ACCESS','148.70.67.47')],
 //    'allowedOriginsPatterns' => [],
     'allowedHeaders' => ['Authorization','Content-Type', 'X-Requested-With'],
     'allowedMethods' => ['GET', 'POST', 'PUT',  'DELETE', 'OPTIONS'],
