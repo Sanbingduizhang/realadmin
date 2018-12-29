@@ -61,24 +61,37 @@ class BaseController extends Controller
     {
         $usercode = htmlspecialchars($request->get('usercode',null));
         $pwd = htmlspecialchars($request->get('password',null));
-        $nc = htmlspecialchars($request->get('nc',null));
+        $nc = htmlspecialchars($request->get('name',null));
+        $email = htmlspecialchars($request->get('email',null));
 
         if (empty($usercode) || empty($pwd) || empty($nc)) {
             return response_failed('请输入相应参数');
         }
         //正则匹配账号
-        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]{4,15}$/',$usercode)) {
+        if (!preg_match('/^[a-zA-Z]{4,15}$/',$usercode)) {
             return response_failed('账号由字母/数字/下划线组成(4~16),以字母开头');
         }
         //密码正则匹配
         if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]{5,17}$/',$pwd)) {
-            return response_failed('密码有字母/数字/下划线组成(6~18),以字母开头');
+            return response_failed('密码有字母/数字/下划线组成(5~16),以字母开头');
+        }
+        //邮箱匹配
+        if (!preg_match('/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/',$email)) {
+            return response_failed('请输入正确的邮箱');
         }
         //入库查询
-        $searchRes = $this->userInfoRepository
+        //先查邮箱是否存在
+        $searcheRes = $this->userInfoRepository
+            ->where(['email' => $email])
+            ->first();
+        if ($searcheRes) {
+            //此处放回code=-2，则提醒是账号已经存在，
+            return response_failed('该邮箱已被注册',-2);
+        }
+        $searchuRes = $this->userInfoRepository
             ->where(['usercode' => $usercode])
             ->first();
-        if ($searchRes) {
+        if ($searchuRes) {
             //此处放回code=-2，则提醒是账号已经存在，
             return response_failed('此账号已经存在',-2);
         }
@@ -87,6 +100,7 @@ class BaseController extends Controller
             'usercode' => $usercode,
             'password' => Hash::make($pwd),
             'name' => $nc,
+            'email' => $email,
         ]);
         if ($create) {
             return response_success(['message' => '注册成功']);
