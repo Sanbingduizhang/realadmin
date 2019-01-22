@@ -14,5 +14,6 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         'base/login',
         'base/register',
+        'wechat',
     ];
 }

@@ -47,8 +47,9 @@ class BaseController extends Controller
         $token = $this->issueJwtToken([
             'uid'=>$searchRes->id,
             'usercode'=>$searchRes->usercode,
+
         ]);
-        return response_success(['token' => $token]);
+        return response_success(['token' => $token,'type' => $searchRes->type]);
 
     }
 
