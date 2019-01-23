@@ -15,9 +15,9 @@ class WechatController extends Controller
     public function server()
     {
 
-        $officialAccount = Factory::officialAccount(config('wechat.official_account.default')); // 公众号
-
-//dd($officialAccount);
+//        $app = Factory::officialAccount(config('wechat.official_account.default')); // 公众号
+//        dd($app->access_token->getToken());
+//        dd($officialAccount);
 //        $app = app('wechat.official_account');
 //        dd($app);
 //        $app->server->push(function($message){
@@ -25,40 +25,35 @@ class WechatController extends Controller
 //        });
 //
 //        return $app->server->serve();
-        $res = $this->sendAlertMsg(1,2,3,4,5);
-        echo $res;exit();
+        $res = $this->sendAlertMsg();
+        var_dump($res);
+        exit();
     }
 
 
-    public function sendAlertMsg($title, $service, $status, $message, $remark)
+    public function sendAlertMsg()
     {
         $config = config('wechat.official_account.default');
 //        dd($config);
         date_default_timezone_set('Asia/Shanghai');
         $app = Factory::officialAccount($config); // 公众号
-        dd($app->access_token->getToken());
-        $templateId = "12335454";   //这里是模板ID，自行去公众号获取
-        $currentTime = date('Y-m-d H:i:s', time());
-        $host = "baidu123.com";   //你的域名
+        dd($app);
 
-        $openids = ["1256456965252"];   //关注微信公众号的openid，前往公众号获取
-        foreach ($openids as $v) {
-            $result = $app->template_message->send([
-                'touser' => $v,
-                'template_id' => $templateId,
-                'url' => 'baidu.com',  //上边的域名
-                'data' => [
-                    'first' => $title,
-                    'keyword1' => $currentTime,
-                    'keyword2' => $host,
-                    'keyword3' => $service,
-                    'keyword4' => $status,
-                    'keyword5' => $message,
-                    'remark' => $remark,
-                ]
-            ]);
-            Log::info("template send result:", $result);
-        }
-        return 11;
+
+        $result = $app->template_message->send([
+            'touser' => "oSAUb0lOEfQu8Q_up87ZsyAp_GUU",
+            'template_id' => "WkyesmEZqKqxvfdglBWmxDyZy4SNweGyd2MfqJS9Pzg",
+            'url' => "https://www.nblistener.com/video.php?videourl=",  //上边的域名
+            'miniprogram' => [],
+            'data' => [
+                'first' => ['value' => '发布详情如下', 'color' => '#173177'],
+                'keyword1' => ['value' => 'eee', 'color' => '#173177'],
+                'keyword2' => ['value' => 'aaa', 'color' => '#173177'],
+                'remark' => ['value' => '点击播放视频', 'color' => '#173177'],
+            ]
+        ]);;
+        Log::info("template send result:", $result);
+        return $result;
+
     }
 }
