@@ -108,7 +108,7 @@ class WxController extends Controller
     {
         $user = $this->app->oauth->user()->getId();
         Log::info($user);
-        
+
         dd('成功绑定');
     }
 
