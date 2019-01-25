@@ -24,4 +24,7 @@ Route::any('/set-btn','WechatController@setButton');
 
 Route::group(['prefix' => 'wx'],function () {
    Route::any('/','WxController@server');
+   Route::any('/bind-user','WxController@bindUser');
+   Route::any('/user-set','WxController@userSet');
+    Route::any('/set-btn','WxController@setButton');
 });
