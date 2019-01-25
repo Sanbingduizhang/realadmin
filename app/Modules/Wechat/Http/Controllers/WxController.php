@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Log;
 class WxController extends Controller
 {
 
-    protected $token = 'wechat';
     protected $app;
 
     public function __construct()
@@ -24,12 +23,27 @@ class WxController extends Controller
 
     public function server()
     {
-        Log::info($_REQUEST);
-        $echoStr = $_GET['echostr'];
-        if ($this->checkSignature()) {
-            echo $echoStr;
-            exit();
-        }
+
+        $this->app->server->setMessageHandler(function($message){
+            if ($message->MsgType=='event') {
+                if ($message->Event=='subscribe') {
+                    return "欢迎关注易录播公众号";
+                } elseif ($message->Event=='unsubscribe') {
+                    return "已经取消关注号";
+                }
+            }
+
+        });
+
+        Log::info('return response.');
+
+        return $this->app->server->serve();
+//        Log::info($_REQUEST);
+//        $echoStr = $_GET['echostr'];
+//        if ($this->checkSignature()) {
+//            echo $echoStr;
+//            exit();
+//        }
     }
 
     //检查签名
