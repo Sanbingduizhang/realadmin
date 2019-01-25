@@ -24,6 +24,16 @@ class WxController extends Controller
     public function server()
     {
 
+        $this->app->server->push(function ($message) {
+            if ($message->MsgType == 'event') {
+                if ($message->Event == 'subscribe') {
+                    return "欢迎关注易录播公众号";
+                } elseif ($message->Event == 'unsubscribe') {
+                    return "已经取消关注号";
+                }
+            }
+        });
+
 //        $this->app->server->setMessageHandler(function($message){
 //            if ($message->MsgType=='event') {
 //                if ($message->Event=='subscribe') {
