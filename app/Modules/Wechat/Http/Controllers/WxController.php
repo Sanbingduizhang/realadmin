@@ -70,13 +70,14 @@ class WxController extends Controller
             }
         });
 
-        Log::info('return response.');
+
 
         return $this->app->server->serve();
     }
 
     public function bindUser(Request $request)
     {
+        Log::info('bind __ ' . $this->app->oauth->user()->getId());
         return $this->app->oauth->scopes(['snsapi_userinfo'])->setRequest($request)->redirect();
     }
 
