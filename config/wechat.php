@@ -72,7 +72,7 @@ return [
              */
              'oauth' => [
                  'scopes'   => array_map('trim', explode(',', env('WECHAT_OFFICIAL_ACCOUNT_OAUTH_SCOPES', 'snsapi_userinfo'))),
-                 'callback' => env('WECHAT_OFFICIAL_ACCOUNT_OAUTH_CALLBACK', 'http://148.70.67.47/api/wx//user-set.php'),
+                 'callback' => env('WECHAT_OFFICIAL_ACCOUNT_OAUTH_CALLBACK', 'http://148.70.67.47/api/wx/user-set'),
              ],
         ],
     ],
