@@ -6,8 +6,9 @@ use EasyWeChat\Factory;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 
-class WxController extends Controller
+class WechatController extends Controller
 {
     protected $app;
 
@@ -69,7 +70,7 @@ class WxController extends Controller
                 $sendArr['touser'] = $uv;
                 //发送信息
                 $result = $this->app->template_message->send($sendArr);
-                \Log::info("template send result:", $result);
+                Log::info("template send result:", $result);
             }
 
 
@@ -99,19 +100,14 @@ class WxController extends Controller
     {
         $buttons = [
             [
-                "name"       => "录播授权",
-                "sub_button" => [
-                    [
-                        "type" => "view",
-                        "name" => "搜索",
-                        "url"  => "http://www.baidu.com/"
-                    ],
-                    [
-                        "type" => "click",
-                        "name" => "我的录播",
-                        "key" => "my_lubo"
-                    ],
-                ],
+                "type" => "view",
+                "name" => "绑定授权",
+                "url"  => "http://148.70.67.47/shouquan.html"
+            ],
+            [
+                "type" => "view",
+                "name" => "我的微课",
+                "url" => "http://148.70.67.47/mylubo.html"
             ],
         ];
         $setRes = $this->app->menu->create($buttons);

@@ -18,3 +18,10 @@ use Illuminate\Support\Facades\Route;
 //    // return $request->wechat();
 //})->middleware('auth:api');
 Route::any('/wechat','WechatController@server');
+Route::any('/set-btn','WechatController@setButton');
+
+
+
+Route::group(['prefix' => 'wx'],function () {
+   Route::any('/','WxController@server');
+});
