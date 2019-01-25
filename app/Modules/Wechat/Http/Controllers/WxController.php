@@ -6,6 +6,7 @@ use EasyWeChat\Factory;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 
 class WxController extends Controller
 {
@@ -23,6 +24,7 @@ class WxController extends Controller
 
     public function server()
     {
+        Log::info($_REQUEST);
         $echoStr = $_GET['echostr'];
         if ($this->checkSignature()) {
             echo $echoStr;
