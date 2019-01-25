@@ -24,45 +24,20 @@ class WxController extends Controller
     public function server()
     {
 
-        $this->app->server->setMessageHandler(function($message){
-            if ($message->MsgType=='event') {
-                if ($message->Event=='subscribe') {
-                    return "欢迎关注易录播公众号";
-                } elseif ($message->Event=='unsubscribe') {
-                    return "已经取消关注号";
-                }
-            }
-
-        });
+//        $this->app->server->setMessageHandler(function($message){
+//            if ($message->MsgType=='event') {
+//                if ($message->Event=='subscribe') {
+//                    return "欢迎关注易录播公众号";
+//                } elseif ($message->Event=='unsubscribe') {
+//                    return "已经取消关注号";
+//                }
+//            }
+//
+//        });
 
         Log::info('return response.');
 
         return $this->app->server->serve();
-//        Log::info($_REQUEST);
-//        $echoStr = $_GET['echostr'];
-//        if ($this->checkSignature()) {
-//            echo $echoStr;
-//            exit();
-//        }
-    }
-
-    //检查签名
-    private function checkSignature()
-    {
-        $signature = $_GET["signature"];
-        $timestamp = $_GET["timestamp"];
-        $nonce = $_GET["nonce"];
-        $token = $this->token;
-        $tmpArr = array($token, $timestamp, $nonce);
-        sort($tmpArr, SORT_STRING);
-        $tmpStr = implode($tmpArr);
-        $tmpStr = sha1($tmpStr);
-
-        if ($tmpStr == $signature) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     //响应消息
