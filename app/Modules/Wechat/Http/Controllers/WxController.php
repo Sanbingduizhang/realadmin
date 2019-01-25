@@ -20,18 +20,31 @@ class WxController extends Controller
         $this->app = Factory::officialAccount($config); // 公众号
     }
 
-
+    /**
+     * 微信使用验证token以及相关简单回复的消息
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function server()
     {
-
         $this->app->server->push(function ($message) {
+            //用于查看返回消息
             Log::info($message);
             switch ($message['MsgType']) {
                 case 'event':
-                    return '收到事件消息';
+                    if ($message['Event'] == 'subscribe') {
+                        Log::info('_openid_' . $message['FromUserName'] .'_' . '关注公众号');
+                        return '欢迎关注易录播公众号';
+                    }
+
+                    if($message['Event'] == 'unsubscribe') {
+                        Log::info('_openid_' . $message['FromUserName'] .'_' . '取消关注公众号');
+                        return '已经取消关注';
+                    }
+                    return '精品录播,开创新的学习';
                     break;
                 case 'text':
-                    return '收到文字消息';
+                    //返回用户发送的消息
+                    return $message['Content'];
                     break;
                 case 'image':
                     return '收到图片消息';
@@ -57,293 +70,44 @@ class WxController extends Controller
             }
         });
 
-//        $this->app->server->setMessageHandler(function($message){
-//            if ($message->MsgType=='event') {
-//                if ($message->Event=='subscribe') {
-//                    return "欢迎关注易录播公众号";
-//                } elseif ($message->Event=='unsubscribe') {
-//                    return "已经取消关注号";
-//                }
-//            }
-//
-//        });
-
         Log::info('return response.');
 
         return $this->app->server->serve();
     }
 
-    //响应消息
-    public function responseMsg()
+    public function bindUser(Request $request)
     {
-        $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
-        if (!empty($postStr)) {
-            $this->logger("R " . $postStr);
-            $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
-            $RX_TYPE = trim($postObj->MsgType);
-
-            switch ($RX_TYPE) {
-                case "event":
-                    $result = $this->receiveEvent($postObj);
-                    break;
-                case "text":
-                    $result = $this->receiveText($postObj);
-                    break;
-                case "image":
-                    $result = $this->receiveImage($postObj);
-                    break;
-                case "location":
-                    $result = $this->receiveLocation($postObj);
-                    break;
-                case "voice":
-                    $result = $this->receiveVoice($postObj);
-                    break;
-                case "video":
-                    $result = $this->receiveVideo($postObj);
-                    break;
-                case "link":
-                    $result = $this->receiveLink($postObj);
-                    break;
-                default:
-                    $result = "unknow msg type: " . $RX_TYPE;
-                    break;
-            }
-            $this->logger("T " . $result);
-            echo $result;
-        } else {
-            echo "";
-            exit;
-        }
+        return $this->app->oauth->scopes(['snsapi_userinfo'])->setRequest($request)->redirect();
     }
 
-    //接收事件消息
-    private function receiveEvent($object)
+    /**
+     * 设置相关按钮
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function setButton()
     {
-        $content = "";
-        switch ($object->Event) {
-            case "subscribe":
-                $content = "欢迎关注易录播公众号 ";
-                $content .= (!empty($object->EventKey)) ? ("\n来自二维码场景 " . str_replace("qrscene_", "", $object->EventKey)) : "";
-                break;
-            case "unsubscribe":
-                $content = "取消关注";
-                break;
-            default:
-                $content = "receive a new event: " . $object->Event;
-                break;
-        }
-        $result = $this->transmitText($object, $content);
-        return $result;
+        $buttons = [
+            [
+                "type" => "view",
+                "name" => "绑定授权",
+//                "url"  => "http://148.70.67.47/shouquan.html",
+                "url"  => "http://148.70.67.47/api/wx/bind-user",
+            ],
+            [
+                "type" => "view",
+                "name" => "我的微课",
+                "url" => "http://148.70.67.47/mylubo.html"
+            ],
+        ];
+        $setRes = $this->app->menu->create($buttons);
+        return response_success($setRes);
     }
 
-    //接收文本消息
-    private function receiveText($object)
+    public function userSet(Request $request)
     {
-        switch ($object->Content) {
-            case "文本":
-                $content = "这是个文本消息";
-                break;
-            default:
-                $content = date("Y-m-d H:i:s", time());
-                break;
-        }
-        if (is_array($content)) {
-            if (isset($content[0]['PicUrl'])) {
-                $result = $this->transmitNews($object, $content);
-            } else if (isset($content['MusicUrl'])) {
-                $result = $this->transmitMusic($object, $content);
-            }
-        } else {
-            $result = $this->transmitText($object, $content);
-        }
-        return $result;
-    }
-
-    private function receiveImage($object)
-    {
-        $content = array("MediaId" => $object->MediaId);
-        $result = $this->transmitImage($object, $content);
-        return $result;
-    }
-
-    private function receiveLocation($object)
-    {
-        $content = "你发送的是位置，纬度为：" . $object->Location_X . "；经度为：" . $object->Location_Y . "；缩放级别为：" . $object->Scale . "；位置为：" . $object->Label;
-        $result = $this->transmitText($object, $content);
-        return $result;
-    }
-
-    private function receiveVoice($object)
-    {
-        if (isset($object->Recognition) && !empty($object->Recognition)) {
-            $content = "你刚才说的是：" . $object->Recognition;
-            $result = $this->transmitText($object, $content);
-        } else {
-            $content = array("MediaId" => $object->MediaId);
-            $result = $this->transmitVoice($object, $content);
-        }
-
-        return $result;
-    }
-
-    private function receiveVideo($object)
-    {
-        $content = array("MediaId" => $object->MediaId, "ThumbMediaId" => $object->ThumbMediaId, "Title" => "", "Description" => "");
-        $result = $this->transmitVideo($object, $content);
-        return $result;
-    }
-
-    private function receiveLink($object)
-    {
-        $content = "你发送的是链接，标题为：" . $object->Title . "；内容为：" . $object->Description . "；链接地址为：" . $object->Url;
-        $result = $this->transmitText($object, $content);
-        return $result;
-    }
-
-    private function transmitText($object, $content)
-    {
-        $textTpl = "<xml>
-<ToUserName><![CDATA[%s]]></ToUserName>
-<FromUserName><![CDATA[%s]]></FromUserName>
-<CreateTime>%s</CreateTime>
-<MsgType><![CDATA[text]]></MsgType>
-<Content><![CDATA[%s]]></Content>
-</xml>";
-        $result = sprintf($textTpl, $object->FromUserName, $object->ToUserName, time(), $content);
-        return $result;
-    }
-
-    private function transmitImage($object, $imageArray)
-    {
-        $itemTpl = "<Image>
-    <MediaId><![CDATA[%s]]></MediaId>
-</Image>";
-
-        $item_str = sprintf($itemTpl, $imageArray['MediaId']);
-
-        $textTpl = "<xml>
-<ToUserName><![CDATA[%s]]></ToUserName>
-<FromUserName><![CDATA[%s]]></FromUserName>
-<CreateTime>%s</CreateTime>
-<MsgType><![CDATA[image]]></MsgType>
-$item_str
-</xml>";
-
-        $result = sprintf($textTpl, $object->FromUserName, $object->ToUserName, time());
-        return $result;
-    }
-
-    private function transmitVoice($object, $voiceArray)
-    {
-        $itemTpl = "<Voice>
-    <MediaId><![CDATA[%s]]></MediaId>
-</Voice>";
-
-        $item_str = sprintf($itemTpl, $voiceArray['MediaId']);
-
-        $textTpl = "<xml>
-<ToUserName><![CDATA[%s]]></ToUserName>
-<FromUserName><![CDATA[%s]]></FromUserName>
-<CreateTime>%s</CreateTime>
-<MsgType><![CDATA[voice]]></MsgType>
-$item_str
-</xml>";
-
-        $result = sprintf($textTpl, $object->FromUserName, $object->ToUserName, time());
-        return $result;
-    }
-
-    private function transmitVideo($object, $videoArray)
-    {
-        $itemTpl = "<Video>
-    <MediaId><![CDATA[%s]]></MediaId>
-    <ThumbMediaId><![CDATA[%s]]></ThumbMediaId>
-    <Title><![CDATA[%s]]></Title>
-    <Description><![CDATA[%s]]></Description>
-</Video>";
-
-        $item_str = sprintf($itemTpl, $videoArray['MediaId'], $videoArray['ThumbMediaId'], $videoArray['Title'], $videoArray['Description']);
-
-        $textTpl = "<xml>
-<ToUserName><![CDATA[%s]]></ToUserName>
-<FromUserName><![CDATA[%s]]></FromUserName>
-<CreateTime>%s</CreateTime>
-<MsgType><![CDATA[video]]></MsgType>
-$item_str
-</xml>";
-
-        $result = sprintf($textTpl, $object->FromUserName, $object->ToUserName, time());
-        return $result;
-    }
-
-    private function transmitNews($object, $newsArray)
-    {
-        if (!is_array($newsArray)) {
-            return;
-        }
-        $itemTpl = "    <item>
-        <Title><![CDATA[%s]]></Title>
-        <Description><![CDATA[%s]]></Description>
-        <PicUrl><![CDATA[%s]]></PicUrl>
-        <Url><![CDATA[%s]]></Url>
-    </item>
-";
-        $item_str = "";
-        foreach ($newsArray as $item) {
-            $item_str .= sprintf($itemTpl, $item['Title'], $item['Description'], $item['PicUrl'], $item['Url']);
-        }
-        $newsTpl = "<xml>
-<ToUserName><![CDATA[%s]]></ToUserName>
-<FromUserName><![CDATA[%s]]></FromUserName>
-<CreateTime>%s</CreateTime>
-<MsgType><![CDATA[news]]></MsgType>
-<Content><![CDATA[]]></Content>
-<ArticleCount>%s</ArticleCount>
-<Articles>
-$item_str</Articles>
-</xml>";
-
-        $result = sprintf($newsTpl, $object->FromUserName, $object->ToUserName, time(), count($newsArray));
-        return $result;
-    }
-
-    private function transmitMusic($object, $musicArray)
-    {
-        $itemTpl = "<Music>
-    <Title><![CDATA[%s]]></Title>
-    <Description><![CDATA[%s]]></Description>
-    <MusicUrl><![CDATA[%s]]></MusicUrl>
-    <HQMusicUrl><![CDATA[%s]]></HQMusicUrl>
-</Music>";
-
-        $item_str = sprintf($itemTpl, $musicArray['Title'], $musicArray['Description'], $musicArray['MusicUrl'], $musicArray['HQMusicUrl']);
-
-        $textTpl = "<xml>
-<ToUserName><![CDATA[%s]]></ToUserName>
-<FromUserName><![CDATA[%s]]></FromUserName>
-<CreateTime>%s</CreateTime>
-<MsgType><![CDATA[music]]></MsgType>
-$item_str
-</xml>";
-
-        $result = sprintf($textTpl, $object->FromUserName, $object->ToUserName, time());
-        return $result;
-    }
-
-    private function logger($log_content)
-    {
-        if (isset($_SERVER['HTTP_APPNAME'])) {   //SAE
-            sae_set_display_errors(false);
-            sae_debug($log_content);
-            sae_set_display_errors(true);
-        } else if ($_SERVER['REMOTE_ADDR'] != "127.0.0.1") { //LOCAL
-            $max_size = 10000;
-            $log_filename = "log.xml";
-            if (file_exists($log_filename) and (abs(filesize($log_filename)) > $max_size)) {
-                unlink($log_filename);
-            }
-            file_put_contents($log_filename, date('H:i:s') . " " . $log_content . "\r\n", FILE_APPEND);
-        }
+        $user = $this->app->oauth->user();
+        Log::info($user);
+        dd('成功绑定');
     }
 
 }

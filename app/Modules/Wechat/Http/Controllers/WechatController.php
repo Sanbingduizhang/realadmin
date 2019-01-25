@@ -102,7 +102,8 @@ class WechatController extends Controller
             [
                 "type" => "view",
                 "name" => "绑定授权",
-                "url"  => "http://148.70.67.47/shouquan.html"
+//                "url"  => "http://148.70.67.47/shouquan.html",
+                "url"  => "http://148.70.67.47/api/wx/bind-user",
             ],
             [
                 "type" => "view",
