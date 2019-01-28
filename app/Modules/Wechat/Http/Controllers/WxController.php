@@ -28,7 +28,7 @@ class WxController extends Controller
     {
         $this->app->server->push(function ($message) {
             //用于查看返回消息
-            Log::info($message);
+            Log::info('server__' . $message);
             switch ($message['MsgType']) {
                 case 'event':
                     if ($message['Event'] == 'subscribe') {
@@ -75,14 +75,9 @@ class WxController extends Controller
         return $this->app->server->serve();
     }
 
-    public function bindUser()
+    public function bindUser(Request $request)
     {
-//        $user = $this->app->oauth->user();
-        Log::info('sessssss___' . session('wechat.oauth_user.default'));
-        dd(33333333);
-        return header('location:http://148.70.67.47/shouquan.html');
-//        Log::info('bind __ ');
-//        return $this->app->oauth->scopes(['snsapi_userinfo'])->setRequest($request)->redirect();
+        return $this->app->oauth->scopes(['snsapi_userinfo'])->setRequest($request)->redirect();
     }
 
     /**
@@ -110,15 +105,12 @@ class WxController extends Controller
 
     public function userSet()
     {
-        $user = $this->app->oauth->user()->getId();
-        Log::info($user);
-        $tar = 'location:http://148.70.67.47/shouquan.html?openid=' . $user;
+        $user = $this->app->oauth->user();
+        Log::info('userSet__' . $user);
+        $tar = 'location:http://148.70.67.47/shouquan.html?openid=' . $user->getId();
         Log::info('open__' . $tar);
-
         return header($tar);
 
-
-        dd('成功绑定');
     }
 
 
