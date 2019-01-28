@@ -75,11 +75,11 @@ class WxController extends Controller
         return $this->app->server->serve();
     }
 
-    public function bindUser(Request $request)
+    public function bindUser()
     {
         $user = $this->app->oauth->user();
         Log::info($user->getId());
-        dd(222);
+        return header('location:http://148.70.67.47/shouquan.html');
 //        Log::info('bind __ ');
 //        return $this->app->oauth->scopes(['snsapi_userinfo'])->setRequest($request)->redirect();
     }
