@@ -77,12 +77,13 @@ class WxController extends Controller
 
     public function bindUser(Request $request)
     {
-        Log::info('bind __ ');
-//        return $this->app->oauth->scopes(['snsapi_userinfo'])->setRequest($request)->redirect();
-        $this->app->oauth->scopes(['snsapi_userinfo'])->setRequest($request);
-        $user = $this->app->oauth->user();
-//        Log::info($user);
-        Log::info($user->getId());
+        Log::info('openid__' . $this->app->getId());
+        Log::info('bind __ ' . $request);
+        return $this->app->oauth->scopes(['snsapi_userinfo'])->setRequest($request)->redirect();
+//        $this->app->oauth->scopes(['snsapi_userinfo'])->setRequest($request);
+//        $user = $this->app->oauth->user();
+////        Log::info($user);
+//        Log::info($user->getId());
     }
 
     /**
