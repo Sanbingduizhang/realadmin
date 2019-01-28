@@ -90,7 +90,6 @@ class WxController extends Controller
             [
                 "type" => "view",
                 "name" => "绑定授权",
-//                "url"  => "http://148.70.67.47/shouquan.html",
                 "url"  => "http://148.70.67.47/api/wx/bind-user",
             ],
             [
@@ -108,7 +107,7 @@ class WxController extends Controller
         return response_success($setRes);
     }
 
-    public function userSet()
+    public function bindSet()
     {
         $user = $this->app->oauth->user();
         Log::info('userSet__' . $user->getId());
