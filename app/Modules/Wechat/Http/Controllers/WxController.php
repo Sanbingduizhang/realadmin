@@ -79,6 +79,7 @@ class WxController extends Controller
     {
 //        $user = $this->app->oauth->user();
         Log::info('sessssss___' . session('wechat.oauth_user.default'));
+        dd(33333333);
         return header('location:http://148.70.67.47/shouquan.html');
 //        Log::info('bind __ ');
 //        return $this->app->oauth->scopes(['snsapi_userinfo'])->setRequest($request)->redirect();
