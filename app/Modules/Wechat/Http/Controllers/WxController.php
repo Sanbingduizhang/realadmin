@@ -108,7 +108,8 @@ class WxController extends Controller
     {
         $user = $this->app->oauth->user()->getId();
         Log::info($user);
-        return header('/shouquan.html');
+
+        return header('location:http://148.70.67.47/shouquan.html?openid=' . $user);
 
 
         dd('成功绑定');
