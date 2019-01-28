@@ -26,6 +26,7 @@ class WxController extends Controller
      */
     public function server()
     {
+        dd(2323);
         $this->app->server->push(function ($message) {
             //用于查看返回消息
             Log::info('server__' . $message);
@@ -106,7 +107,7 @@ class WxController extends Controller
     public function userSet()
     {
         $user = $this->app->oauth->user();
-        Log::info('userSet__' . $user);
+        Log::info('userSet__' . $user->getId());
         $tar = 'location:http://148.70.67.47/shouquan.html?openid=' . $user->getId();
         Log::info('open__' . $tar);
         return header($tar);
