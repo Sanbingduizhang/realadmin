@@ -20,14 +20,12 @@ use Illuminate\Support\Facades\Route;
 Route::any('/wechat','WechatController@server');
 Route::any('/set-btn','WechatController@setButton');
 
-Route::group(['middleware' => ['wechat.oauth']], function () {
-    Route::any('/bind-user','WxController@bindUser');
-});
+
 
 //Route::group(['prefix' => 'wx','middleware' => ['wechat.oauth:snsapi_userinfo']],function () {
 Route::group(['prefix' => 'wx'],function () {
    Route::any('/','WxController@server');
-
+    Route::any('/bind-user','WxController@bindUser')->middleware(['wechat.oauth']);
    Route::any('/bind-set','WxController@bindSet');
    Route::any('/set-btn','WxController@setButton');
 });
