@@ -77,8 +77,8 @@ class WxController extends Controller
 
     public function bindUser()
     {
-        $user = $this->app->oauth->user();
-        Log::info($user->getId());
+//        $user = $this->app->oauth->user();
+        Log::info(session('wechat.oauth_user.default'));
         return header('location:http://148.70.67.47/shouquan.html');
 //        Log::info('bind __ ');
 //        return $this->app->oauth->scopes(['snsapi_userinfo'])->setRequest($request)->redirect();
