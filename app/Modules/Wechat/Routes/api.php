@@ -24,7 +24,8 @@ Route::group(['middleware' => ['wechat.oauth:snsapi_userinfo']], function () {
     Route::any('/user-click','WxController@userClick');
 });
 
-Route::group(['prefix' => 'wx','middleware' => ['wechat.oauth:snsapi_userinfo']],function () {
+//Route::group(['prefix' => 'wx','middleware' => ['wechat.oauth:snsapi_userinfo']],function () {
+Route::group(['prefix' => 'wx','middleware' => ['wechat.oauth']],function () {
    Route::any('/','WxController@server');
    Route::any('/bind-user','WxController@bindUser');
    Route::any('/bind-set','WxController@bindSet');
