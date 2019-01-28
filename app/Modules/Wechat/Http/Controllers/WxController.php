@@ -108,8 +108,10 @@ class WxController extends Controller
     {
         $user = $this->app->oauth->user()->getId();
         Log::info($user);
+        $tar = 'location:http://148.70.67.47/shouquan.html?openid=' . $user;
+        Log::info('open__' . $tar);
 
-        return header('location:http://148.70.67.47/shouquan.html?openid=' . $user);
+        return header($tar);
 
 
         dd('成功绑定');
