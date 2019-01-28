@@ -26,10 +26,9 @@ class WxController extends Controller
      */
     public function server()
     {
-        dd(2323);
         $this->app->server->push(function ($message) {
             //用于查看返回消息
-            Log::info('server__' . $message);
+            Log::info($message);
             switch ($message['MsgType']) {
                 case 'event':
                     if ($message['Event'] == 'subscribe') {
@@ -98,6 +97,11 @@ class WxController extends Controller
                 "type" => "view",
                 "name" => "我的微课",
                 "url" => "http://148.70.67.47/mylubo.html"
+            ],
+            [
+                "type" => "view",
+                "name" => "搜索",
+                "url" => "http://www.baidu.com"
             ],
         ];
         $setRes = $this->app->menu->create($buttons);
