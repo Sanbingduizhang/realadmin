@@ -45,7 +45,7 @@
 </footer>
 
 <script src="{{ URL::asset('js/zeptojs1.2.comzepto.min.js') }}"></script>
-<script src="{{ URL::asset('js/template-web.js') }}s"></script>
+<script src="{{ URL::asset('js/template-web.js') }}"></script>
 <script>
 // 确定绑定
 $('.bind_submit').on('click', function() {
