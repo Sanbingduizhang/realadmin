@@ -34,7 +34,7 @@
           <input type="password" required id="pwd" class="input_style_update color_dbdbdb" placeholder="请输入密码">
         </div>
         <!-- openid隐示传递 -->
-        <input type="text" required id="openid" value="{{ $openid }}}">
+        <input type="text" id="openid" value="{{ $openid }}}">
     </div>
     <p class="btn bind_submit">绑定</p>
   </div>
@@ -53,8 +53,15 @@ $.ajax({
   type: 'POST',
   url: 'http://10.10.10.167/api/wx/set-user?usercode='+ $('#name').val()+'&password='+ $('#pwd').val(),
   dataType: 'json',
+    date:{
+        usercode:$('#name').val(),
+
+        password:$('#pwd').val(),
+
+        openid:$('#openid').val()
+    },
   success: function(result) {
-    if (result.status_code === 200) {
+    if (result.code === 1) {
       alert("成功！");
       // 跳转至 我的课程
       window.open('./bind_sucess.html', '_self');
