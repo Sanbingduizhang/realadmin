@@ -77,7 +77,8 @@ class WxController extends Controller
 
     public function bindUser(Request $request)
     {
-        return $this->app->oauth->scopes(['snsapi_base'])->setRequest($request)->redirect();
+//        return $this->app->oauth->scopes(['snsapi_base'])->setRequest($request)->redirect();
+        return $this->app->oauth->scopes(['snsapi_userinfo'])->redirect("http://148.70.67.47/shouquan.html");
     }
 
     /**
@@ -111,7 +112,7 @@ class WxController extends Controller
     {
         $user = $this->app->oauth->user();
         Log::info('userSet__' . $user->getId());
-        
+
         return response_success(['id' => $user->getId()]);
 
     }
