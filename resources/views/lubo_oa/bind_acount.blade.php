@@ -65,7 +65,7 @@ $.ajax({
       alert("成功！");
       // 跳转至 我的课程
 
-        location.href = "{{ URL::action('Wechat\WxController@bindSucess') }}";
+        location.href = "{{ URL::action('WxController@bindSucess') }}";
 //      window.open('./', '_self');
     } else{
       alert("账号或密码错误！");
