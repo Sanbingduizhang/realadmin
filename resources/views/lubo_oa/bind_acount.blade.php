@@ -23,7 +23,7 @@
 
   <div class="root_wrap">
     <div class="bind_account_wrapper">
-      <img class="login_logo" src="./images/bind_acount/logo.png" alt="logo" />
+      <img class="login_logo" src="{{ URL::asset('images/bind_acount/logo.png') }}" alt="logo" />
       <div class="bind_form">
         <div class="form_row">
           <label for="name" class="label_name"><i class="icon icon_user"></i></label>
@@ -45,7 +45,7 @@
 </footer>
 
 <script src="{{ URL::asset('js/zeptojs1.2.comzepto.min.js') }}"></script>
-<script src="./js/template-web.js"></script>
+<script src="{{ URL::asset('js/template-web.js') }}s"></script>
 <script>
 // 确定绑定
 $('.bind_submit').on('click', function() {
