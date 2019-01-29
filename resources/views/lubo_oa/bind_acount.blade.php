@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="format-detection" content="telephone=no">
-    <!-- 插件 -->\
+    <!-- 插件 -->
     <link rel="stylesheet" href="{{ URL::asset('css/style.css') }}">
     <!-- 项目页样式文件 -->
     <link rel="stylesheet" href="{{ URL::asset('css/index.css') }}">
@@ -44,7 +44,7 @@
   <a href="javascript: void(0);">账号绑定</a><a class="my_video_course" href="javascript:void(0)">我的微课</a>
 </footer>
 
-<script src="./js/zeptojs1.2.comzepto.min.js"></script>
+<script src="{{ URL::asset('js/zeptojs1.2.comzepto.min.js') }}"></script>
 <script src="./js/template-web.js"></script>
 <script>
 // 确定绑定
