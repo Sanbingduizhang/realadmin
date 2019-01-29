@@ -67,7 +67,6 @@ $.ajax({
 
         {{--location.href = "{{ URL::action('WxController@bindSucess') }}";--}}
         location.href = "{{ URL::route('wx.bind-sucess') }}";
-//      window.open('./', '_self');
     } else{
       alert("账号或密码错误！");
     }

@@ -128,6 +128,7 @@ class WxController extends Controller
      */
     public function bindAcount()
     {
+
         return view("lubo_oa.bind_acount");
     }
 
