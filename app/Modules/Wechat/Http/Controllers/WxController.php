@@ -78,7 +78,7 @@ class WxController extends Controller
     public function bindUser(Request $request)
     {
 //        return $this->app->oauth->scopes(['snsapi_base'])->setRequest($request)->redirect();
-        return $this->app->oauth->scopes(['snsapi_userinfo'])->redirect("http://148.70.67.47/shouquan.html");
+        return $this->app->oauth->scopes(['snsapi_userinfo'])->redirect();
     }
 
     /**
@@ -91,7 +91,7 @@ class WxController extends Controller
             [
                 "type" => "view",
                 "name" => "绑定授权",
-                "url"  => "http://148.70.67.47/shouquan.html",
+                "url"  => "http://148.70.67.47/api/wx/bind-user",
             ],
             [
                 "type" => "view",
@@ -112,8 +112,7 @@ class WxController extends Controller
     {
         $user = $this->app->oauth->user();
         Log::info('userSet__' . $user->getId());
-
-        return response_success(['id' => $user->getId()]);
+        return view("wechat.shouquan",['openid' => $user->getId()]);
 
     }
 
