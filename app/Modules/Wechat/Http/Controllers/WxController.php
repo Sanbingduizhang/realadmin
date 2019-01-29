@@ -75,9 +75,8 @@ class WxController extends Controller
         return $this->app->server->serve();
     }
 
-    public function bindUser(Request $request)
+    public function bindUser()
     {
-//        return $this->app->oauth->scopes(['snsapi_base'])->setRequest($request)->redirect();
         return $this->app->oauth->scopes(['snsapi_userinfo'])->redirect();
     }
 
@@ -108,12 +107,15 @@ class WxController extends Controller
         return response_success($setRes);
     }
 
+    /**
+     * 视图跳转并传递openid
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function bindSet()
     {
         $user = $this->app->oauth->user();
         Log::info('userSet__' . $user->getId());
-        return view("wechat.shouquan",['openid' => $user->getId()]);
-
+        return view("lubo_oa.bind_acount",['openid' => $user->getId()]);
     }
 
 

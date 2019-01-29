@@ -36,17 +36,17 @@
         var ma = $("#ma").val();
         console.log(zh);
         console.log(ma);
-//        $.ajax({
-//            type: "POST",
-//            url: "http://148.70.67.47/api/wx/bind-set",
-//            dataType: "json",
-//            success: function (response) {
-//                $("#shu").val(response.data);
-//            },
-//            error: function (error) {
-//                $("#shu").val(error);
-//            }
-//        });
+        $.ajax({
+            type: "POST",
+            url: "http://148.70.67.47/api/wx/bind-set",
+            dataType: "json",
+            success: function (response) {
+                $("#shu").val(response.data);
+            },
+            error: function (error) {
+                $("#shu").val(error);
+            }
+        });
     });
 </script>
 </html>

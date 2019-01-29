@@ -1,0 +1,86 @@
+{
+  "code": 200,
+  "msg": "成功",
+  "result": {
+    "data": [
+      {
+        "id": 1,
+        "name": "语文",
+        "icon": "yuwen",
+        "notice": 6
+      },
+      {
+        "id": 2,
+        "name": "数学",
+        "icon": "shuxue",
+        "notice": 0
+      },
+      {
+        "id": 3,
+        "name": "英语",
+        "icon": "shuxue",
+        "notice": 0
+      },
+      {
+        "id": 4,
+        "name": "物理",
+        "icon": "wuli",
+        "notice": 0
+      },
+      {
+        "id": 5,
+        "name": "化学",
+        "icon": "huaxue",
+        "notice": 0
+      },
+      {
+        "id": 6,
+        "name": "生物",
+        "icon": "shengwu",
+        "notice": 0
+      },
+      {
+        "id": 7,
+        "name": "政治",
+        "icon": "zhengzhi",
+        "notice": 0
+      },
+      {
+        "id": 8,
+        "name": "历史",
+        "icon": "yuwen",
+        "notice": 0
+      },
+      {
+        "id": 9,
+        "name": "地理",
+        "icon": "yuwen",
+        "notice": 0
+      },
+      {
+        "id": 10,
+        "name": "美术",
+        "icon": "yuwen",
+        "notice": 0
+      },
+      {
+        "id": 11,
+        "name": "音乐",
+        "icon": "yuwen",
+        "notice": 0
+      },
+      {
+        "id": 12,
+        "name": "体育",
+        "icon": "yuwen",
+        "notice": 0
+      },
+      {
+        "id": 13,
+        "name": "综合",
+        "icon": "yuwen",
+        "notice": 0
+      }
+    ]
+  }
+}
