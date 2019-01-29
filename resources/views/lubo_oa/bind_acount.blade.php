@@ -64,7 +64,7 @@ $.ajax({
     if (result.code === 1) {
       alert("成功！");
       // 跳转至 我的课程
-      window.open('./bind_sucess.html', '_self');
+      window.open('./bind_sucess.blade.php', '_self');
     } else{
       alert("账号或密码错误！");
     }
