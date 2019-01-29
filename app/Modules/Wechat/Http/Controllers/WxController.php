@@ -90,7 +90,7 @@ class WxController extends Controller
             [
                 "type" => "view",
                 "name" => "绑定授权",
-                "url"  => "http://148.70.67.47/api/wx/bind-user",
+                "url"  => "http://148.70.67.47/shouquan.html",
             ],
             [
                 "type" => "view",
@@ -111,9 +111,8 @@ class WxController extends Controller
     {
         $user = $this->app->oauth->user();
         Log::info('userSet__' . $user->getId());
-        $tar = 'location:http://148.70.67.47/shouquan.html?openid=' . $user->getId();
-        Log::info('open__' . $tar);
-        return header($tar);
+        
+        return response_success(['id' => $user->getId()]);
 
     }
 
