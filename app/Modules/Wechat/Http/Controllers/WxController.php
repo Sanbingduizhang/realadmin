@@ -119,4 +119,43 @@ class WxController extends Controller
     }
 
 
+
+
+    /*****************页面的相关跳转控制************************************/
+    /**
+     * 返回绑定页面
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function bindAcount()
+    {
+        return view("lubo_oa.bind_acount");
+    }
+
+    /**
+     * 返回绑定成功页面
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function bindSucess()
+    {
+        return view("lubo_oa.bind_sucess");
+    }
+
+    /**
+     * 返回我的课程页面
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function myCourse()
+    {
+        return view("lubo_oa.my_course");
+    }
+
+    /**
+     * 返回视频列表页面
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function videoList()
+    {
+        return view("lubo_oa.video_list");
+    }
+
 }
