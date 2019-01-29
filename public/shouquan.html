@@ -9,7 +9,6 @@
 <body>
     <p>
         <span>账号</span>
-        <span>window.location.search</span>
         <input type="text" id="zh">
         
     </p>
@@ -21,6 +20,27 @@
     <p>
         <button id="btn">确定</button>
     </p>
+    <p>
+        <input type="text" id="shu">
+    </p>
     
 </body>
+<script src="js/jquery-1.12.4.js"></script>
+<script>
+    $("#btn").click(function() {
+        var zh = $("#zh").val();
+        var ma = $("#ma").val();
+        $.ajax({
+        type: "POST",
+        url: "http://148.70.67.47/api/wx/bind-set",
+        dataType: "json",
+        success: function (response) {
+            $("#shu").val(response.data);
+        },
+        error: function (error) {
+            $("#shu").val(error);
+        }
+    });
+    });
+</script>
 </html>
