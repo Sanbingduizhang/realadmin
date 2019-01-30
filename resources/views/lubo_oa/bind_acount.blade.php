@@ -54,7 +54,7 @@
     $('.bind_submit').on('click', function () {
         $.ajax({
             type: 'POST',
-            url: 'http://117.135.72.218:16780/api/wx/set-user?usercode=' + $('#name').val() + '&password=' + $('#pwd').val() + '&openid=' + $('#openid').val(),
+            url: 'http://www.ischool365.com:16780/api/wx/set-user?usercode=' + $('#name').val() + '&password=' + $('#pwd').val() + '&openid=' + $('#openid').val(),
             dataType: 'json',
             success: function (result) {
                 if (result.code === 1) {
