@@ -26,11 +26,12 @@ class WechatAuth
                 return response_failed('sumit message is failed');
             }
 
-//            $arr = [
-//                'usercode' => $tokenArr['user_code'],
-//                'school_id' => $tokenArr['school_id'],
-//                'privatekey' => $tokenArr['private_key'],
-//            ];
+            $arr = [
+                'usercode' => $tokenArr[0],
+                'school_id' => $tokenArr[1],
+                'privatekey' => $tokenArr[2],
+                'openid' => $tokenArr[3],
+            ];
 //            $user = Cache::rememberForever(
 //                Cache::KEY_PAD_USERINFO . $arr['usercode'] . $arr['school_id'],
 //                function() use ($arr){
@@ -38,10 +39,10 @@ class WechatAuth
 //                }
 //            );
             $return = [
-                'user_code' => $tokenArr['user_code'],
-                'school_id' => $tokenArr['school_id'],
-                'private_key' => $tokenArr['private_key'],
-                'openid' => $tokenArr['openid'],
+                'user_code' => $arr['usercode'],
+                'school_id' => $arr['school_id'],
+                'private_key' => $arr['privatekey'],
+                'openid' => $arr['openid'],
                 'other' => [
                     "ClassId" => "106",
                     "GradeId" => "8",
