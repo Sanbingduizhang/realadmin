@@ -28,7 +28,7 @@ Route::group(['prefix' => 'wx'],function () {
 //   Route::any('/bind-user','WxController@bindUser')->middleware('wechat.oauth');
    Route::any('/bind-user',function () {
        dd(session('wechat.oauth_user.default'));
-   })->middleware('wechat.oauth');
+   })->middleware(['web','wechat.oauth']);
 
    Route::any('/bind-set','WxController@bindSet');
 
