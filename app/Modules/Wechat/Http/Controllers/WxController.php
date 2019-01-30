@@ -12,12 +12,15 @@ class WxController extends Controller
 {
 
     protected $app;
+    protected $wxuser;
 
     public function __construct()
     {
         $config = config('wechat.official_account.default');
         date_default_timezone_set('Asia/Shanghai');
         $this->app = Factory::officialAccount($config); // 公众号
+
+        $this->wxuser = session('wechat.oauth_user.default');
     }
 
     /**
@@ -77,12 +80,7 @@ class WxController extends Controller
 
     public function bindUser()
     {
-        $user = session('wechat.oauth_user.default');
-        var_dump($user);
-        var_dump($user->getId());
-        dd($user->all());
-        return view('lubo_oa.bind_acount',['openid' => session('wechat.oauth_user.default')]);
-        return $this->app->oauth->scopes(['snsapi_userinfo'])->redirect();
+        return view('lubo_oa.bind_acount',['openid' => $this->wxuser->getId()]);
     }
 
     /**
@@ -106,7 +104,7 @@ class WxController extends Controller
             [
                 "type" => "view",
                 "name" => "绑定授权",
-                "url"  => "http://148.70.67.47/api/wx/bind-user",
+                "url"  => "http://148.70.67.47/api/wx/bind-acount",
             ],
             [
                 "type" => "view",
@@ -136,7 +134,8 @@ class WxController extends Controller
     public function bindAcount()
     {
 
-        return view("lubo_oa.bind_acount");
+        return view('lubo_oa.bind_acount',['openid' => $this->wxuser->getId()]);
+//        return view("lubo_oa.bind_acount");
     }
 
     /**
