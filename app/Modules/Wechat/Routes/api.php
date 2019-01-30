@@ -32,8 +32,8 @@ Route::group(['prefix' => 'wx'],function () {
    Route::any('/set-btn','WxController@setButton');
 
 
-   Route::any('/bind-acount','WxController@bindAcount');
+   Route::any('/bind-acount','WxController@bindAcount')->name('wx.bind-acount');
    Route::any('/bind-sucess','WxController@bindSucess')->name('wx.bind-sucess');
-   Route::any('/my-course','WxController@myCourse');
-   Route::any('/video-list','WxController@videoList');
+   Route::any('/my-course','WxController@myCourse')->name('wx.my-course');
+   Route::any('/video-list','WxController@videoList')->name('wx.video-list');
 });

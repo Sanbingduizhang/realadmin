@@ -50,13 +50,15 @@
 
     $.ajax({
         type: 'GET',
-        url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/stu/index',
+        url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/stu/stu-msg',
         dataType: 'json',
         beforeSend: function (request) {
             request.setRequestHeader('Authorization', "Bearer " + window.localStorage.getItem('yj_wx_token'));
         },
         success: function (res) {
             if ('successful' === res.status) {
+                $('.name').text(res.data.name);
+                $('.grade_class').text(res.data.grade_class);
                 console.log(res);
             } else {
                 alert('网络错误！');
@@ -67,7 +69,10 @@
     // 确定绑定
     $('.un_bind_submit').on('click', function () {
         alert("成功！");
-        window.open('./bind_acount.html', '_self');
+        window.localStorage.removeItem('yj_wx_token');
+        window.localStorage.removeItem('token');
+        location.href = "{{ URL::route('wx.bind-acount') }}";
+
     })
 </script>
 </body>
