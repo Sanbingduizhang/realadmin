@@ -77,7 +77,7 @@ class WxController extends Controller
 
     public function bindUser()
     {
-        return view('lubo_oa.bind_acount');
+        return view('lubo_oa.bind_acount',['openid' => $this->app->oauth->user()->getId()]);
         return $this->app->oauth->scopes(['snsapi_userinfo'])->redirect();
     }
 
