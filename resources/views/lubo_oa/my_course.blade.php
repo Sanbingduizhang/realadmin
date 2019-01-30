@@ -50,14 +50,13 @@
 <script src="{{ URL::asset('js/index.js') }}"></script>
 <script src="{{ URL::asset('js/template-web.js') }}"></script>
 <script>
-//    template.config('openTag', '[[')
-//    template.config('closeTag', ']]')
+
     $.ajax({
         type: 'GET',
         url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/stu/index',
         dataType: 'json',
         beforeSend: function (request) {
-            request.setRequestHeader('Authorization', window.MAIN_CONFIG.Authorization);
+            request.setRequestHeader('Authorization', "Bearer " + window.localStorage.getItem('yj_wx_token'));
         },
         success: function (res) {
             if ('successful' === res.status) {

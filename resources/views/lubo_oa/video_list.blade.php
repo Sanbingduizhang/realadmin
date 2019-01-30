@@ -31,24 +31,24 @@
 <div class="root_wrap" id="tpl_parent">
     <p id="hasplay" style="display: none;"></p>
     <script type="text/html" id="tpl">
-        {{if data.data && data.data.length > 0 }}
+        <%if data.data && data.data.length > 0 %>
         <ul class="video_list">
-            {{each data.data v i}}
-            <li class="item" data-vid="{{v.video_id}}">
-                <video id="my_video_{{v.video_id}}" class="video_content" controls poster="{{v.img_path}}"
-                       videoid="{{v.video_id}}" onplay="begin_playing({{v.video_id}})">
-                    <source src="{{v.path}}" type="video/mp4">
+            <%each data.data v i%>
+            <li class="item" data-vid="<%v.video_id%>">
+                <video id="my_video_<%v.video_id%>" class="video_content" controls poster="<%v.img_path%>"
+                       videoid="<%v.video_id%>" onplay="begin_playing(<%v.video_id%>)">
+                    <source src="<%v.path%>" type="video/mp4">
                 </video>
                 <div class="detail">
-                    <p class="title text_ellipsis">{{v.video_title}}</p>
-                    <p class="date">{{v.created_at}}</p>
+                    <p class="title text_ellipsis"><%v.video_title%></p>
+                    <p class="date"><%v.created_at%></p>
                 </div>
             </li>
-            {{/each}}
+            <%/each%>
         </ul>
-        {{else}}
+        <%else}}
         <div class="no_data_text">暂无数据</div>
-        {{/if}}
+        <%/if}}
     </script>
 
     <footer class="footer">
@@ -74,7 +74,7 @@
             url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/stu/sub-index/' + getUrlParams.subid + '?line=' + window.MAIN_CONFIG.PAGE_LINE + '&page=' + window.MAIN_CONFIG.CUR_PAGE,
             dataType: 'json',
             beforeSend: function (request) {
-                request.setRequestHeader('Authorization', window.MAIN_CONFIG.Authorization);
+                request.setRequestHeader('Authorization', "Bearer " + window.localStorage.getItem('yj_wx_token'));
             },
             success: function (res) {
                 if ('successful' === res.status) {
