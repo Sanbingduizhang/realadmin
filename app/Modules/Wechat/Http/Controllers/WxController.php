@@ -77,6 +77,7 @@ class WxController extends Controller
 
     public function bindUser()
     {
+        dd(session('wechat.oauth_user.default'));
         return view('lubo_oa.bind_acount',['openid' => session('wechat.oauth_user.default')]);
         return $this->app->oauth->scopes(['snsapi_userinfo'])->redirect();
     }
