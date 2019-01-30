@@ -3,6 +3,7 @@
 namespace App\Modules\Wechat\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Log;
 
 class WechatAuth
 {
@@ -18,6 +19,7 @@ class WechatAuth
         //获取header头部，如果没有则则从地址栏获取
         $token = $request->header('Authorization');
         $token = trim(str_replace('Bearer','',$token));
+        Log::info($token);
         try {
             $tokenArr = decrypt($token);
             if(count($tokenArr) != 4){
