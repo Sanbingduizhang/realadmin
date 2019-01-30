@@ -31,24 +31,24 @@
 <div class="root_wrap" id="tpl_parent">
     <p id="hasplay" style="display: none;"></p>
     <script type="text/html" id="tpl">
-        <%if data.data && data.data.length > 0 %>
+        [[if data.data && data.data.length > 0 ]]
         <ul class="video_list">
-            <%each data.data v i%>
-            <li class="item" data-vid="<%v.video_id%>">
-                <video id="my_video_<%v.video_id%>" class="video_content" controls poster="<%v.img_path%>"
-                       videoid="<%v.video_id%>" onplay="begin_playing(<%v.video_id%>)">
-                    <source src="<%v.path%>" type="video/mp4">
+            [[each data.data v i]]
+            <li class="item" data-vid="[[v.video_id]]">
+                <video id="my_video_[[v.video_id]]" class="video_content" controls poster="[[v.img_path]]"
+                       videoid="[[v.video_id]]" onplay="begin_playing([[v.video_id]])">
+                    <source src="[[v.path]]" type="video/mp4">
                 </video>
                 <div class="detail">
-                    <p class="title text_ellipsis"><%v.video_title%></p>
-                    <p class="date"><%v.created_at%></p>
+                    <p class="title text_ellipsis">[[v.video_title]]</p>
+                    <p class="date">[[v.created_at]]</p>
                 </div>
             </li>
-            <%/each%>
+            [[/each]]
         </ul>
-        <%else}}
+        [[else]]
         <div class="no_data_text">暂无数据</div>
-        <%/if}}
+        [[/if]]
     </script>
 
     <footer class="footer">
@@ -62,6 +62,10 @@
 <script src="{{ URL::asset('js/dropload.js') }}"></script>
 
 <script>
+    //重写js模板语法
+    var rule = template.defaults.rules[1];
+    rule.test = new RegExp(rule.test.source.replace('\{\{', '\\[\\[').replace('\}\}', '\\]\\]'));
+
     var getUrlParams = getSearchObj();
     $('#hasplay').attr('data-hasdata', '1');
 
