@@ -33,7 +33,7 @@ Route::group(['prefix' => 'wx'],function () {
 
 
    Route::any('/bind-acount','WxController@bindAcount');
-   Route::any('/bind-sucess','WxController@bindSucess')->name('wx.bind-sucess')->middleware('wechatauth');
+   Route::any('/bind-sucess','WxController@bindSucess')->name('wx.bind-sucess');
    Route::any('/my-course','WxController@myCourse');
    Route::any('/video-list','WxController@videoList');
 });

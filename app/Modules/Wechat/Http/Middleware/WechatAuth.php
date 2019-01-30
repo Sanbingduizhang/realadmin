@@ -21,7 +21,7 @@ class WechatAuth
         $token = trim(str_replace('Bearer','',$token));
         Log::info($token);
         try {
-            $tokenArr = decrypt($token);
+            $tokenArr = explode('+',$token);
             if(count($tokenArr) != 4){
                 return response_failed('sumit message is failed');
             }
