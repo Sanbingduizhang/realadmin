@@ -51,7 +51,7 @@
 <script src="{{ URL::asset('js/template-web.js') }}"></script>
 <script>
 
-
+    //重写js模板语法
     var rule = template.defaults.rules[1];
     rule.test = new RegExp(rule.test.source.replace('\{\{', '\\[\\[').replace('\}\}', '\\]\\]'));
 
