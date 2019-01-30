@@ -47,14 +47,13 @@
 <script src="{{ URL::asset('js/zeptojs1.2.comzepto.min.js') }}"></script>
 <script src="{{ URL::asset('js/index.js') }}"></script>
 <script>
-    console.log(window.localStorage.getItem('token'));
-    console.log(window.MAIN_CONFIG.Authorization);
+    
     $.ajax({
         type: 'GET',
         url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/stu/index',
         dataType: 'json',
         beforeSend: function (request) {
-            request.setRequestHeader('Authorization', window.MAIN_CONFIG.Authorization);
+            request.setRequestHeader('Authorization', "Bearer " + window.localStorage.getItem('token'));
         },
         success: function (res) {
             if ('successful' === res.status) {
