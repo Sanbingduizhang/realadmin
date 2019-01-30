@@ -53,7 +53,7 @@
 
 
     var rule = template.defaults.rules[1];
-    rule.test = new RegExp(rule.test.source.replace('\{\{', '\[\[').replace('\}\}', '\]\]'));
+    rule.test = new RegExp(rule.test.source.replace('\{\{', '\\[\\[').replace('\}\}', '\\]\\]'));
 
     $.ajax({
         type: 'GET',
