@@ -17,26 +17,24 @@ use Illuminate\Support\Facades\Route;
 //Route::get('/wechat', function (Request $request) {
 //    // return $request->wechat();
 //})->middleware('auth:api');
-Route::any('/wechat','WechatController@server');
-Route::any('/set-btn','WechatController@setButton');
-
+Route::any('/wechat', 'WechatController@server');
+Route::any('/set-btn', 'WechatController@setButton');
 
 
 //Route::group(['prefix' => 'wx','middleware' => ['wechat.oauth:snsapi_userinfo']],function () {
-Route::group(['prefix' => 'wx'],function () {
-   Route::any('/','WxController@server');
+Route::group(['prefix' => 'wx'], function () {
+    Route::any('/', 'WxController@server');
 //   Route::any('/bind-user','WxController@bindUser')->middleware('wechat.oauth');
-   Route::any('/bind-user',function () {
-       dd(session('wechat.oauth_user.default'));
-   })->middleware(['web','wechat.oauth']);
-
-   Route::any('/bind-set','WxController@bindSet');
-
-   Route::any('/set-btn','WxController@setButton');
 
 
-   Route::any('/bind-acount','WxController@bindAcount')->name('wx.bind-acount')->middleware('wechat.oauth');
-   Route::any('/bind-sucess','WxController@bindSucess')->name('wx.bind-sucess');
-   Route::any('/my-course','WxController@myCourse')->name('wx.my-course');
-   Route::any('/video-list','WxController@videoList')->name('wx.video-list');
+    Route::any('/bind-set', 'WxController@bindSet');
+
+    Route::any('/set-btn', 'WxController@setButton');
+    Route::any('/bind-user', 'WxController@bindUser')->middleware(['web', 'wechat.oauth']);
+
+
+    Route::any('/bind-acount', 'WxController@bindAcount')->name('wx.bind-acount')->middleware(['web', 'wechat.oauth']);
+    Route::any('/bind-sucess', 'WxController@bindSucess')->name('wx.bind-sucess')->middleware(['web', 'wechat.oauth']);
+    Route::any('/my-course', 'WxController@myCourse')->name('wx.my-course')->middleware(['web', 'wechat.oauth']);
+    Route::any('/video-list', 'WxController@videoList')->name('wx.video-list')->middleware(['web', 'wechat.oauth']);
 });
