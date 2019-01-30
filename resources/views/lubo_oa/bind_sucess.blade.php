@@ -63,7 +63,6 @@
             }
         }
     });
-    console.log({{  $user }});
     // 确定绑定
     $('.un_bind_submit').on('click', function () {
         alert("成功！");
