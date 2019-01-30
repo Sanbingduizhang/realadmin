@@ -63,6 +63,8 @@
                     console.log(result);
                     window.MAIN_CONFIG.Authorization = "Bearer " + result.data.token;
 
+window.localStorage.setItem('token',result.data.token);
+
                     console.log(window.MAIN_CONFIG.Authorization);
                     {{--location.href = "{{ URL::action('WxController@bindSucess') }}";--}}
                         location.href = "{{ URL::route('wx.bind-sucess') }}";
