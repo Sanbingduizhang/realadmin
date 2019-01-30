@@ -59,6 +59,7 @@
             if ('successful' === res.status) {
                 $('.name').text(res.data.name);
                 $('.stuname').text(res.data.name);
+                window.localStorage.setItem('yj_wx_user_name',res.data.name);
                 $('.grade_class').text(res.data.grade_class);
                 console.log(res);
             } else {
@@ -71,7 +72,7 @@
     $('.un_bind_submit').on('click', function () {
         alert("成功！");
         window.localStorage.removeItem('yj_wx_token');
-        window.localStorage.removeItem('token');
+        window.localStorage.removeItem('yj_wx_user_name');
         location.href = "{{ URL::route('wx.bind-acount',['openid' => $openid]) }}";
 
     })

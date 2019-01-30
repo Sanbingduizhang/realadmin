@@ -52,7 +52,7 @@
     </script>
 
     <footer class="footer">
-        <a href="javascript:void(0);">陈晓梅</a><a class="my_video_course" href="{{ URL::route('wx.my-course',['openid' => $openid]) }}">我的微课</a>
+        <a href="{{ URL::route('wx.bind-sucess',['openid' => $openid]) }}" class="stuName">陈晓梅</a><a class="my_video_course" href="{{ URL::route('wx.my-course',['openid' => $openid]) }}">我的微课</a>
     </footer>
 </div>
 
@@ -62,6 +62,9 @@
 <script src="{{ URL::asset('js/dropload.js') }}"></script>
 
 <script>
+
+    $('.stuName').text(window.localStorage.getItem('yj_wx_user_name'));
+
     //重写js模板语法
     var rule = template.defaults.rules[1];
     rule.test = new RegExp(rule.test.source.replace('\{\{', '\\[\\[').replace('\}\}', '\\]\\]'));
