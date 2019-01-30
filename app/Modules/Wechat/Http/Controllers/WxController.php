@@ -133,8 +133,9 @@ class WxController extends Controller
      */
     public function bindAcount()
     {
-
-        return view('lubo_oa.bind_acount',['openid' => $this->wxuser->getId()]);
+        $user = session('wechat.oauth_user.default');
+        Log::info($user->getId());
+        return view('lubo_oa.bind_acount',['openid' => $user->getId()]);
 //        return view("lubo_oa.bind_acount");
     }
 
