@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * 获取用户信息
+ * @return mixed
+ */
+function getUser()
+{
+    return \Cache::store('array')->get('user');
+}
+
+
+
 if (!function_exists('response_success')) {
     /**
      * @param array $params

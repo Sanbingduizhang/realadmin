@@ -34,7 +34,7 @@
                 <i class="icon icon_pwd_active"></i>
                 <p class="grade_class">高三（3）班</p>
             </div>
-            <img class="move_book" src="./images/move_book.png" alt="logo"/>
+            <img class="move_book" src="{{ URL::asset('images/move_book.png') }}" alt="logo"/>
         </div>
         <p class="btn un_bind_submit">解除绑定</p>
     </div>
@@ -46,6 +46,7 @@
 
 <script src="{{ URL::asset('js/zeptojs1.2.comzepto.min.js') }}"></script>
 <script>
+    console.log({{  $user }});
     // 确定绑定
     $('.un_bind_submit').on('click', function () {
         alert("成功！");

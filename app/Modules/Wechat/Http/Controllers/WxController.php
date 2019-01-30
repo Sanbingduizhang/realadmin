@@ -81,6 +81,17 @@ class WxController extends Controller
     }
 
     /**
+     * 视图跳转并传递openid
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function bindSet()
+    {
+        $user = $this->app->oauth->user();
+        Log::info('userSet__' . $user->getId());
+        return view("lubo_oa.bind_acount",['openid' => $user->getId()]);
+    }
+
+    /**
      * 设置相关按钮
      * @return \Illuminate\Http\JsonResponse
      */
@@ -107,16 +118,7 @@ class WxController extends Controller
         return response_success($setRes);
     }
 
-    /**
-     * 视图跳转并传递openid
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function bindSet()
-    {
-        $user = $this->app->oauth->user();
-        Log::info('userSet__' . $user->getId());
-        return view("lubo_oa.bind_acount",['openid' => $user->getId()]);
-    }
+
 
 
 
@@ -128,6 +130,7 @@ class WxController extends Controller
      */
     public function bindAcount()
     {
+
         return view("lubo_oa.bind_acount");
     }
 
@@ -137,7 +140,7 @@ class WxController extends Controller
      */
     public function bindSucess()
     {
-        return view("lubo_oa.bind_sucess");
+        return view("lubo_oa.bind_sucess",['user'=>getUser()]);
     }
 
     /**
