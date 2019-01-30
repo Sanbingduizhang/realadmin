@@ -51,8 +51,10 @@
 <script src="{{ URL::asset('js/template-web.js') }}"></script>
 <script>
 
-    template.config('openTag', '[[')
-    template.config('closeTag', ']]')
+
+    var rule = template.defaults.rules[0];
+    rule.test = new RegExp(rule.test.source.replace('<%', '[[').replace('%>', ']]'));
+
     $.ajax({
         type: 'GET',
         url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/stu/index',
