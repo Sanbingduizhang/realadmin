@@ -66,7 +66,7 @@
                 if (result.code === 1) {
                     alert("成功！");
                     // 跳转至 我的课程
-
+                    window.MAIN_CONFIG.Authorization = result.data.token;
                     {{--location.href = "{{ URL::action('WxController@bindSucess') }}";--}}
                         location.href = "{{ URL::route('wx.bind-sucess') }}";
                 } else {
