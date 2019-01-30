@@ -54,15 +54,15 @@
     $('.bind_submit').on('click', function () {
         $.ajax({
             type: 'POST',
-            url: 'http://10.10.10.167/api/wx/set-user?usercode=' + $('#name').val() + '&password=' + $('#pwd').val(),
+            url: 'http://10.10.10.167/api/wx/set-user?usercode=' + $('#name').val() + '&password=' + $('#pwd').val() + '&openid=' + $('#openid').val(),
             dataType: 'json',
-            date: {
-                usercode: $('#name').val(),
-
-                password: $('#pwd').val(),
-
-                openid: $('#openid').val()
-            },
+//            date: {
+//                usercode: $('#name').val(),
+//
+//                password: $('#pwd').val(),
+//
+//                openid: $('#openid').val()
+//            },
             success: function (result) {
                 if (result.code === 1) {
                     alert("成功！");
