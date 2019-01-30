@@ -10,19 +10,19 @@ class WechatAuth
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
         //获取header头部，如果没有则则从地址栏获取
         $token = $request->header('Authorization');
-        $token = trim(str_replace('Bearer','',$token));
+        $token = trim(str_replace('Bearer', '', $token));
         Log::info($token);
         try {
-            $tokenArr = explode('+',$token);
-            if(count($tokenArr) != 4){
+            $tokenArr = explode('+', $token);
+            if (count($tokenArr) != 4) {
                 return response_failed('sumit message is failed');
             }
 
@@ -45,15 +45,17 @@ class WechatAuth
                 'openid' => $arr['openid'],
                 'other' => [
                     "ClassId" => "106",
+                    "ClassName" => "(01)班",
                     "GradeId" => "8",
-                    "TermId" => "62",
+                    "GradeName" => "初中二年级",
+                    "TermId" => "62"
                 ],
             ];
             \Cache::store('array')->put('user', $return, 1);
 
-        }catch (\UnexpectedValueException $e) {
+        } catch (\UnexpectedValueException $e) {
             return response_failed('The Authorization field in the head does not exist');
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return response_failed($e->getMessage());
         }
 
