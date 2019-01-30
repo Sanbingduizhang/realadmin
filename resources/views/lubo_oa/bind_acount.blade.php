@@ -62,6 +62,7 @@
                     // 跳转至 我的课程
                     console.log(result);
                     window.MAIN_CONFIG.Authorization = "Bearer " + result.data.token;
+
                     console.log(window.MAIN_CONFIG.Authorization);
                     {{--location.href = "{{ URL::action('WxController@bindSucess') }}";--}}
                         location.href = "{{ URL::route('wx.bind-sucess') }}";

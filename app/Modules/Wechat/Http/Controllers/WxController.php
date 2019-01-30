@@ -86,9 +86,9 @@ class WxController extends Controller
      */
     public function bindSet()
     {
-        $user = $this->app->oauth->user();
-        Log::info('userSet__' . $user->getId());
-        return view("lubo_oa.bind_acount",['openid' => $user->getId()]);
+//        $user = $this->app->oauth->user();
+//        Log::info('userSet__' . $user->getId());
+        return view("lubo_oa.bind_acount",['openid' => 111]);
     }
 
     /**
