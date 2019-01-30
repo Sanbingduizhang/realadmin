@@ -27,17 +27,17 @@
 <div class="root_wrap">
     <script type="text/html" id="tpl">
         <ul class="course_list">
-            <%each data.subject v%>
+            [[each data.subject v i]]
             <li class="course_item">
-                <%if v.notify > 0 %>
-                <p class="notice text_ellipsis"> <%v.notify%></p>
-                <%/if%>
-                <a href="./video_list.blade.php?subid=<%v.id%>">
-                    <img class="icon_cover" src="<%v.path%>" alt="<%v.name%>">
+                [[if v.notify > 0 ]]
+                <p class="notice text_ellipsis"> [[v.notify]]</p>
+                [[/if]]
+                <a href="./video_list.blade.php?subid=[[v.id]]">
+                    <img class="icon_cover" src="[[v.path]]" alt="[[v.name]]">
                 </a>
-                <p class="text_ellipsis"><%v.name%></p>
+                <p class="text_ellipsis">[[v.name]]</p>
             </li>
-            <%/each%>
+            [[/each]]
         </ul>
     </script>
 </div>
@@ -51,6 +51,8 @@
 <script src="{{ URL::asset('js/template-web.js') }}"></script>
 <script>
 
+    template.config('openTag', '[[')
+    template.config('closeTag', ']]')
     $.ajax({
         type: 'GET',
         url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/stu/index',
