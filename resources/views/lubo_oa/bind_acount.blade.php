@@ -56,17 +56,11 @@
             type: 'POST',
             url: 'http://10.10.10.167/api/wx/set-user?usercode=' + $('#name').val() + '&password=' + $('#pwd').val() + '&openid=' + $('#openid').val(),
             dataType: 'json',
-//            date: {
-//                usercode: $('#name').val(),
-//
-//                password: $('#pwd').val(),
-//
-//                openid: $('#openid').val()
-//            },
             success: function (result) {
                 if (result.code === 1) {
                     alert("成功！");
                     // 跳转至 我的课程
+                    console.log(result);
                     window.MAIN_CONFIG.Authorization = result.data.token;
                     {{--location.href = "{{ URL::action('WxController@bindSucess') }}";--}}
                         location.href = "{{ URL::route('wx.bind-sucess') }}";

@@ -45,7 +45,24 @@
 </footer>
 
 <script src="{{ URL::asset('js/zeptojs1.2.comzepto.min.js') }}"></script>
+<script src="{{ URL::asset('js/index.js') }}"></script>
 <script>
+    $.ajax({
+        type: 'GET',
+        url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/stu/index',
+        dataType: 'json',
+        beforeSend: function (request) {
+            request.setRequestHeader('Authorization', window.MAIN_CONFIG.Authorization);
+        },
+        success: function (res) {
+            if ('successful' === res.status) {
+                console.log(res);
+            } else {
+                alert('网络错误！');
+                return false;
+            }
+        }
+    });
     console.log({{  $user }});
     // 确定绑定
     $('.un_bind_submit').on('click', function () {
