@@ -46,6 +46,7 @@
 
 <script src="{{ URL::asset('js/zeptojs1.2.comzepto.min.js') }}"></script>
 <script>
+    console.log({{  $user }});
     // 确定绑定
     $('.un_bind_submit').on('click', function () {
         alert("成功！");
