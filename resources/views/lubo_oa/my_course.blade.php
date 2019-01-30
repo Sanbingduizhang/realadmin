@@ -32,7 +32,7 @@
                 [[if v.notify > 0 ]]
                 <p class="notice text_ellipsis"> [[v.notify]]</p>
                 [[/if]]
-                <a href="./video_list.blade.php?subid=[[v.id]]">
+                <a href="{{ URL::route('wx.video-list',['openid' => $openid]) }}?subid=[[v.id]]">
                     <img class="icon_cover" src="[[v.path]]" alt="[[v.name]]?>">
                 </a>
                 <p class="text_ellipsis">[[v.name]]</p>
