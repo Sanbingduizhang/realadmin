@@ -47,7 +47,7 @@
 <script src="{{ URL::asset('js/zeptojs1.2.comzepto.min.js') }}"></script>
 <script src="{{ URL::asset('js/index.js') }}"></script>
 <script>
-    
+
     $.ajax({
         type: 'GET',
         url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/stu/index',
