@@ -140,7 +140,7 @@ class WxController extends Controller
      */
     public function bindSucess()
     {
-        return view("lubo_oa.bind_sucess",['user'=>getUser()]);
+        return view("lubo_oa.bind_sucess");
     }
 
     /**
