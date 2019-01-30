@@ -52,7 +52,7 @@
     </script>
 
     <footer class="footer">
-        <a href="javascript:void(0);">陈晓梅</a><a class="my_video_course" href="./my_course.blade.php">我的微课</a>
+        <a href="javascript:void(0);">陈晓梅</a><a class="my_video_course" href="{{ URL::route('wx.my-course',['openid' => $openid]) }}">我的微课</a>
     </footer>
 </div>
 

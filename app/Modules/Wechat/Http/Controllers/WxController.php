@@ -12,7 +12,6 @@ class WxController extends Controller
 {
 
     protected $app;
-    protected $wxuser;
 
     public function __construct()
     {
@@ -20,7 +19,6 @@ class WxController extends Controller
         date_default_timezone_set('Asia/Shanghai');
         $this->app = Factory::officialAccount($config); // 公众号
 
-        $this->wxuser = session('wechat.oauth_user.default');
     }
 
     /**
@@ -78,10 +76,6 @@ class WxController extends Controller
         return $this->app->server->serve();
     }
 
-    public function bindUser()
-    {
-        return view('lubo_oa.bind_acount',['openid' => $this->wxuser->getId()]);
-    }
 
     /**
      * 视图跳转并传递openid
@@ -136,7 +130,6 @@ class WxController extends Controller
         $user = session('wechat.oauth_user.default');
         Log::info($user->getId());
         return view('lubo_oa.bind_acount',['openid' => $user->getId()]);
-//        return view("lubo_oa.bind_acount");
     }
 
     /**
@@ -145,7 +138,8 @@ class WxController extends Controller
      */
     public function bindSucess()
     {
-        return view("lubo_oa.bind_sucess");
+        $user = session('wechat.oauth_user.default');
+        return view("lubo_oa.bind_sucess",['openid' => $user->getId()]);
     }
 
     /**
@@ -154,7 +148,8 @@ class WxController extends Controller
      */
     public function myCourse()
     {
-        return view("lubo_oa.my_course");
+        $user = session('wechat.oauth_user.default');
+        return view("lubo_oa.my_course",['openid' => $user->getId()]);
     }
 
     /**
@@ -163,7 +158,8 @@ class WxController extends Controller
      */
     public function videoList()
     {
-        return view("lubo_oa.video_list");
+        $user = session('wechat.oauth_user.default');
+        return view("lubo_oa.video_list",['openid' => $user->getId()]);
     }
 
 }

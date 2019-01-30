@@ -41,7 +41,7 @@
 </div>
 
 <footer class="footer">
-    <a href="javascript:void(0);">陈晓梅</a><a class="my_video_course" href="./my_course.blade.php">我的微课</a>
+    <a href="javascript:void(0);" class="stuname">陈晓梅</a><a class="my_video_course" href="{{ URL::route('wx.my-course',['openid' => $openid]) }}">我的微课</a>
 </footer>
 
 <script src="{{ URL::asset('js/zeptojs1.2.comzepto.min.js') }}"></script>
@@ -58,6 +58,7 @@
         success: function (res) {
             if ('successful' === res.status) {
                 $('.name').text(res.data.name);
+                $('.stuname').text(res.data.name);
                 $('.grade_class').text(res.data.grade_class);
                 console.log(res);
             } else {
@@ -71,7 +72,7 @@
         alert("成功！");
         window.localStorage.removeItem('yj_wx_token');
         window.localStorage.removeItem('token');
-        location.href = "{{ URL::route('wx.bind-acount',['openid' => 'asasas']) }}";
+        location.href = "{{ URL::route('wx.bind-acount',['openid' => $openid]) }}";
 
     })
 </script>

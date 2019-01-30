@@ -62,7 +62,7 @@
                     // 跳转至 我的课程
                     window.localStorage.setItem('yj_wx_token',result.data.token);
 
-                    location.href = "{{ URL::route('wx.bind-sucess') }}";
+                    location.href = "{{ URL::route('wx.bind-sucess',['openid' => $openid]) }}";
                 } else {
                     alert("账号或密码错误！");
                 }

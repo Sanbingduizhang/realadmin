@@ -30,7 +30,7 @@ Route::group(['prefix' => 'wx'], function () {
     Route::any('/bind-set', 'WxController@bindSet');
 
     Route::any('/set-btn', 'WxController@setButton');
-    Route::any('/bind-user', 'WxController@bindUser')->middleware(['web', 'wechat.oauth']);
+//    Route::any('/bind-user', 'WxController@bindUser')->middleware(['web', 'wechat.oauth']);
 
 
     Route::any('/bind-acount', 'WxController@bindAcount')->name('wx.bind-acount')->middleware(['web', 'wechat.oauth']);
