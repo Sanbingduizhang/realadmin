@@ -53,7 +53,7 @@
         url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/stu/index',
         dataType: 'json',
         beforeSend: function (request) {
-            request.setRequestHeader('Authorization', "Bearer " + window.localStorage.getItem('token'));
+            request.setRequestHeader('Authorization', "Bearer " + window.localStorage.getItem('yj_wx_token'));
         },
         success: function (res) {
             if ('successful' === res.status) {
