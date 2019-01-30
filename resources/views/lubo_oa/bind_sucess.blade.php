@@ -71,7 +71,7 @@
         alert("成功！");
         window.localStorage.removeItem('yj_wx_token');
         window.localStorage.removeItem('token');
-        location.href = "{{ URL::route('wx.bind-acount') }}";
+        location.href = "{{ URL::route('wx.bind-acount',['openid' => 'asasas']) }}";
 
     })
 </script>
