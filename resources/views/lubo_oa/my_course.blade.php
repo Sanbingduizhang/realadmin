@@ -27,7 +27,7 @@
 <div class="root_wrap">
     <script type="text/html" id="tpl">
         <ul class="course_list">
-            <%each data.subject v i%>
+            <%each data.subject v%>
             <li class="course_item">
                 <%if v.notify > 0 %>
                 <p class="notice text_ellipsis"> <%v.notify%></p>
