@@ -179,6 +179,7 @@ class WxController extends Controller
      */
     private function openidAuth($openid)
     {
+        return 2;
         return '100141101+16+gZK6aaZUf6+oSAUb0lOEfQu8Q_up87ZsyAp_GUU';
 //        $openRes = $this->wxUserRepository->where([
 //            'openid' => $openid,
@@ -196,8 +197,8 @@ class WxController extends Controller
 //        ])->first();
 //
 //        $tokenArr = $bindRes->user_code . '+' . $bindRes->school_id . '+' . $bindRes->private_key . '+' .$openid;
-//
-//        return $tokenArr;
+
+        return $tokenArr;
 
     }
 
