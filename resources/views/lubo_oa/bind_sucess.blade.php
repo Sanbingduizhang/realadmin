@@ -38,7 +38,7 @@
         </div>
         <p class="btn un_bind_submit">解除绑定</p>
     </div>
-    <input type="text" value="{{ $yj_wx_token }}" id="yj_token_wx">
+    <input type="text" value="{{ $yj_wx_token }}" id="yj_token_wx" style="display: none;">
 </div>
 
 <footer class="footer">

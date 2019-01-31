@@ -162,12 +162,12 @@ class WxController extends Controller
 
         $bindRes = $this->openidAuth($user->getId());
         if ($bindRes == 2) {
-            return view('lubo_oa.my_course',['openid' => $user->getId(),'yj_wx_token' => '','yj_wx_name' => '']);
+            return view('lubo_oa.bind_acount',['openid' => $user->getId()]);
         }
 
         Log::info($user->getId());
 
-        return view('lubo_oa.bind_sucess',[
+        return view('lubo_oa.my_course',[
             'openid' => $user->getId(),
             'yj_wx_token' => $bindRes['token'],
             'yj_wx_name' => $bindRes['name']

@@ -41,6 +41,8 @@
         </ul>
     </script>
 </div>
+<input type="text" value="{{ $yj_wx_token }}" id="yj_token_wx" style="display: none;">
+<input type="text" value="{{ $yj_wx_name }}" id="yj_token_user_name" style="display: none;">
 
 <footer class="footer">
     <a href="{{ URL::route('wx.bind-sucess',['openid' => $openid]) }}" class="stuName">陈晓梅</a><a class="my_video_course" href="javascript:void(0)">我的微课</a>
@@ -53,8 +55,10 @@
 
     //如果已经绑定，跳转到成功绑定的页面，设置token值
     var yj_token_wx = $("#yj_token_wx").val();
+    var yj_token_user_name = $("#yj_token_user_name").val();
     if (yj_token_wx) {
         window.localStorage.setItem('yj_wx_token',yj_token_wx);
+        window.localStorage.setItem('yj_wx_user_name',yj_token_user_name);
     }
 
 
