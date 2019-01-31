@@ -128,8 +128,18 @@ class WxController extends Controller
     public function bindAcount()
     {
         $user = session('wechat.oauth_user.default');
+
+        $bindRes = $this->openidAuth($user->getId());
+        if ($bindRes == 2) {
+            return view('lubo_oa.bind_acount',['openid' => $user->getId()]);
+        }
+
         Log::info($user->getId());
-        return view('lubo_oa.bind_acount',['openid' => $user->getId()]);
+
+        return view('lubo_oa.bind_sucess',[
+            'openid' => $user->getId(),
+            'yj_wx_token' => $bindRes,
+        ]);
     }
 
     /**
@@ -160,6 +170,35 @@ class WxController extends Controller
     {
         $user = session('wechat.oauth_user.default');
         return view("lubo_oa.video_list",['openid' => $user->getId()]);
+    }
+
+    /**
+     * 微信是否绑定，是否返回相关信息
+     * @param $openid
+     * @return int|string
+     */
+    private function openidAuth($openid)
+    {
+        return '100141101+16+gZK6aaZUf6+oSAUb0lOEfQu8Q_up87ZsyAp_GUU';
+//        $openRes = $this->wxUserRepository->where([
+//            'openid' => $openid,
+//            'status' => WxUser::STATUS_ON,
+//        ])->first();
+//
+//        if (!$openRes) {
+//            //返回2，说明此账号没有绑定信息
+//            return 2;
+//        }
+//
+//        $bindRes = $this->where([
+//            'wx_user_id' => $openRes->id,
+//            'status' => WxBind::STATUS_ON,
+//        ])->first();
+//
+//        $tokenArr = $bindRes->user_code . '+' . $bindRes->school_id . '+' . $bindRes->private_key . '+' .$openid;
+//
+//        return $tokenArr;
+
     }
 
 }

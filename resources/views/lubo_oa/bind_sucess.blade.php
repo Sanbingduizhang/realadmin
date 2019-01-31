@@ -38,6 +38,7 @@
         </div>
         <p class="btn un_bind_submit">解除绑定</p>
     </div>
+    <input type="text" value="{{ $yj_wx_token }}" id="yj_token_wx">
 </div>
 
 <footer class="footer">
@@ -47,7 +48,11 @@
 <script src="{{ URL::asset('js/zeptojs1.2.comzepto.min.js') }}"></script>
 <script src="{{ URL::asset('js/index.js') }}"></script>
 <script>
-
+    //如果已经绑定，跳转到成功绑定的页面，设置token值
+    var yj_token_wx = $("#yj_token_wx").val();
+    if (!yj_token_wx) {
+        window.localStorage.setItem('yj_wx_token',yj_token_wx);
+    }
     $.ajax({
         type: 'GET',
         url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/stu/stu-msg',
