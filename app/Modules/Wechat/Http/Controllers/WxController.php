@@ -194,7 +194,7 @@ class WxController extends Controller
     private function openidAuth($openid)
     {
 
-        $url = 'http://10.10.10.167/api/wx/remote/wxremote?openid=' . $openid;
+        $url = 'http://www.ischool365.com:16780/api/wx/remote/wxremote?openid=' . $openid;
         $client = new Client();
         $res = $client->request('GET',$url);
 

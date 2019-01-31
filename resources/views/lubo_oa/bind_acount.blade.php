@@ -64,7 +64,7 @@
 
                     location.href = "{{ URL::route('wx.bind-sucess',['openid' => $openid]) }}";
                 } else {
-                    alert("账号或密码错误！");
+                    alert(result.message);
                 }
             }
         })
