@@ -138,7 +138,7 @@ class WxController extends Controller
 
         return view('lubo_oa.bind_sucess',[
             'openid' => $user->getId(),
-            'yj_wx_token' => $bindRes,
+            'yj_wx_token' => $bindRes['token'],
         ]);
     }
 
@@ -149,7 +149,7 @@ class WxController extends Controller
     public function bindSucess()
     {
         $user = session('wechat.oauth_user.default');
-        return view("lubo_oa.bind_sucess",['openid' => $user->getId(),'yj_wx_token' => '',]);
+        return view("lubo_oa.bind_sucess",['openid' => $user->getId(),'yj_wx_token' => '']);
     }
 
     /**
@@ -159,7 +159,19 @@ class WxController extends Controller
     public function myCourse()
     {
         $user = session('wechat.oauth_user.default');
-        return view("lubo_oa.my_course",['openid' => $user->getId()]);
+
+        $bindRes = $this->openidAuth($user->getId());
+        if ($bindRes == 2) {
+            return view('lubo_oa.my_course',['openid' => $user->getId(),'yj_wx_token' => '','yj_wx_name' => '']);
+        }
+
+        Log::info($user->getId());
+
+        return view('lubo_oa.bind_sucess',[
+            'openid' => $user->getId(),
+            'yj_wx_token' => $bindRes['token'],
+            'yj_wx_name' => $bindRes['name']
+        ]);
     }
 
     /**
@@ -196,9 +208,12 @@ class WxController extends Controller
 //            'status' => WxBind::STATUS_ON,
 //        ])->first();
 //
-//        $tokenArr = $bindRes->user_code . '+' . $bindRes->school_id . '+' . $bindRes->private_key . '+' .$openid;
+//        $tokenstr = $bindRes->user_code . '+' . $bindRes->school_id . '+' . $bindRes->private_key . '+' .$openid;
 
-        return $tokenArr;
+        return [
+            'token' => $tokenstr,
+            'name' => $tokenstr,
+        ];
 
     }
 

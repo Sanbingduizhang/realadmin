@@ -50,8 +50,6 @@
 <script>
     //如果已经绑定，跳转到成功绑定的页面，设置token值
     var yj_token_wx = $("#yj_token_wx").val();
-    console.log(yj_token_wx);
-    console.log(!yj_token_wx);
     if (yj_token_wx) {
         window.localStorage.setItem('yj_wx_token',yj_token_wx);
     }

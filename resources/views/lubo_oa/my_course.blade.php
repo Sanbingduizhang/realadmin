@@ -51,6 +51,13 @@
 <script src="{{ URL::asset('js/template-web.js') }}"></script>
 <script>
 
+    //如果已经绑定，跳转到成功绑定的页面，设置token值
+    var yj_token_wx = $("#yj_token_wx").val();
+    if (yj_token_wx) {
+        window.localStorage.setItem('yj_wx_token',yj_token_wx);
+    }
+
+
     $('.stuName').text(window.localStorage.getItem('yj_wx_user_name'));
     //重写js模板语法
     var rule = template.defaults.rules[1];
