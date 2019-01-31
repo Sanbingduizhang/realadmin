@@ -38,3 +38,6 @@ Route::group(['prefix' => 'wx'], function () {
     Route::any('/my-course', 'WxController@myCourse')->name('wx.my-course')->middleware(['web', 'wechat.oauth']);
     Route::any('/video-list', 'WxController@videoList')->name('wx.video-list')->middleware(['web', 'wechat.oauth']);
 });
+
+
+Route::get('/remote','WxController@remote');

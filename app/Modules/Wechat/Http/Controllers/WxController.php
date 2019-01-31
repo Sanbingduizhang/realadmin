@@ -2,7 +2,9 @@
 
 namespace App\Modules\Wechat\Http\Controllers;
 
+use App\Support\OpenPlatform;
 use EasyWeChat\Factory;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
@@ -191,8 +193,17 @@ class WxController extends Controller
      */
     private function openidAuth($openid)
     {
-//        return 2;
-        return '100141101+16+gZK6aaZUf6+oSAUb0lOEfQu8Q_up87ZsyAp_GUU';
+
+        $url = 'http://10.10.10.167/api/wx/remote/wxremote?openid=' . $openid;
+        $client = new Client();
+        $res = $client->request('GET',$url);
+
+        $arr = json_decode($res->getBody(),true);
+        if ($arr['data']['res'] == 2) {
+            return 2;
+        }
+        return $arr['data']['res'];
+        dd(json_decode($res->getBody(),true));
 //        $openRes = $this->wxUserRepository->where([
 //            'openid' => $openid,
 //            'status' => WxUser::STATUS_ON,
@@ -215,6 +226,17 @@ class WxController extends Controller
             'name' => $tokenstr,
         ];
 
+    }
+
+
+
+
+    public function remote()
+    {
+        $client = new Client();
+        $res = $client->request('GET','http://10.10.10.167/api/wx/remote/wxremote?openid=oSAUb0lOEfQu8Q_up87ZsyAp_GUU');
+
+        dd(json_decode($res->getBody(),true));
     }
 
 }
