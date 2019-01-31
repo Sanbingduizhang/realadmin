@@ -75,12 +75,28 @@
             }
         }
     });
-    // 确定绑定
+    // 解除绑定
+
     $('.un_bind_submit').on('click', function () {
-        alert("成功！");
-        window.localStorage.removeItem('yj_wx_token');
-        window.localStorage.removeItem('yj_wx_user_name');
-        location.href = "{{ URL::route('wx.bind-acount',['openid' => $openid]) }}";
+        $.ajax({
+            type: 'GET',
+            url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/stu/unbind-user',
+            dataType: 'json',
+            beforeSend: function (request) {
+                request.setRequestHeader('Authorization', "Bearer " + window.localStorage.getItem('yj_wx_token'));
+            },
+            success: function (res) {
+                if ('successful' === res.status) {
+                    alert("成功！");
+                    window.localStorage.removeItem('yj_wx_token');
+                    window.localStorage.removeItem('yj_wx_user_name');
+                    location.href = "{{ URL::route('wx.bind-acount',['openid' => $openid]) }}";
+                } else {
+                    alert('网络错误！');
+                    return false;
+                }
+            }
+        });
 
     })
 </script>
