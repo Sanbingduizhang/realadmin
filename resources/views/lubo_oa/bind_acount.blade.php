@@ -72,6 +72,7 @@
   <footer class="footer">
     <a href="javascript: void(0);">绑定账号</a><a class="my_video_course unbind" href="javascript:void(0)" >我的微课</a>
   </footer>
+  <a href="{{ URL::route('wx.my-course') }}" style="display: none;" class="coursego"></a>
 
 
 

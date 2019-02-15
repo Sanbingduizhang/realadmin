@@ -46,15 +46,17 @@ function getSearchObj() {
 function setUserMsg() {
     var yj_token_wx = $("#yj_token_wx").val();
     if (yj_token_wx) {
-        window.localStorage.setItem('yj_wx_token',yj_token_wx);
+        window.localStorage.setItem('yj_wx_token', yj_token_wx);
         $('.module_bind_account').removeClass('module_show').addClass('module_hide');
         $('.module_bind_success').removeClass('module_hide').addClass('module_show');
         getUserMsg();
-        var userName = window.localStorage.getItem('yj_wx_token');
-        var str = '<a href="javascript:void(0);">'+userName+'</a><a class="my_video_course" href="{{ URL::route(\'wx.my-course\') }}">我的微课</a>';
+        var userName = window.localStorage.getItem('yj_wx_user_name');
+        var newHref = $(".coursego").attr('href');
+        var str = '<a href="javascript:void(0);">' + userName + '</a><a class="my_video_course" href="' + newHref + '">我的微课</a>';
         $('.footer').html(str)
     }
 }
+
 setUserMsg();
 
 /**
