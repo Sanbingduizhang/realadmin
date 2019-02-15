@@ -40,6 +40,12 @@ function getSearchObj() {
 }
 
 /*------------------------------------- 账号绑定与解绑页  ------------------------------------------------*/
+
+//如果已经绑定，跳转到成功绑定的页面，设置token值
+var yj_token_wx = $("#yj_token_wx").val();
+if (yj_token_wx) {
+    window.localStorage.setItem('yj_wx_token',yj_token_wx);
+}
 /**
  * 确定 绑定
  */

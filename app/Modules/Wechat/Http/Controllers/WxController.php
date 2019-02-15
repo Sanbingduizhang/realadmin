@@ -138,7 +138,7 @@ class WxController extends Controller
 
         Log::info($user->getId());
 
-        return view('lubo_oa.bind_sucess',[
+        return view('lubo_oa.bind_acount',[
             'openid' => $user->getId(),
             'yj_wx_token' => $bindRes['token'],
         ]);

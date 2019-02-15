@@ -64,7 +64,7 @@
       </div>
     </div>
 
-    <input type="text" value="{{ $yj_wx_token }}" id="yj_token_wx" style="display: none;">
+    <input type="text" value="{{ $yj_wx_token }}" id="yj_token_wx">
 
   </div>
   <!-- 绑定账号成功 END -->
