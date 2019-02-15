@@ -85,7 +85,7 @@
   <input type="text" value="{{ $yj_wx_name }}" id="yj_token_user_name" style="display: none;">
 
   <footer class="footer">
-    <a href="{{ URL::route('wx.bind-account',['openid' => $openid]) }}">陈晓梅</a><a class="my_video_course" href="{{ URL::route('wx.my-course',['openid' => $openid]) }}">我的微课</a>
+    <a href="{{ URL::route('wx.bind-sucess',['openid' => $openid]) }}">陈晓梅</a><a class="my_video_course" href="{{ URL::route('wx.my-course',['openid' => $openid]) }}">我的微课</a>
   </footer>
   
 <script src="{{ URL::asset('js/zeptojs1.2.comzepto.min.js') }}"></script>
