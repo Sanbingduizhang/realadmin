@@ -53,12 +53,6 @@ function setUserMsg() {
         $('.module_bind_account').removeClass('module_show').addClass('module_hide');
         $('.module_bind_success').removeClass('module_hide').addClass('module_show');
         getUserMsg();
-        var userName = window.localStorage.getItem('yj_wx_user_name');
-        console.log(userName)
-        console.log(window.localStorage.getItem('yj_wx_user_name'))
-        var newHref = $(".coursego").attr('href');
-        var str = '<a href="javascript:void(0);">' + userName + '</a><a class="my_video_course" href="' + newHref + '">我的微课</a>';
-        $('.footer').html(str)
     }
 }
 
@@ -108,6 +102,10 @@ function getUserMsg() {
                 $('.name').text(res.data.name);
                 $('.stuname').text(res.data.name);
                 $('.grade_class').text(res.data.grade_class);
+
+                var newHref = $(".coursego").attr('href');
+                var str = '<a href="javascript:void(0);">' + res.data.name + '</a><a class="my_video_course" href="' + newHref + '">我的微课</a>';
+                $('.footer').html(str)
             } else {
                 alert('网络错误！');
                 return false;
