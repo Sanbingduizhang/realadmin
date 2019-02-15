@@ -49,9 +49,8 @@ function setUserMsg() {
         window.localStorage.setItem('yj_wx_token',yj_token_wx);
         $('.module_bind_account').removeClass('module_show').addClass('module_hide');
         $('.module_bind_success').removeClass('module_hide').addClass('module_show');
-        var userName = getUserMsg();
-        console.log(userName);
-        console.log(window.localStorage.getItem('yj_wx_token'));
+        getUserMsg();
+        var userName = window.localStorage.getItem('yj_wx_token');
         var str = '<a href="javascript:void(0);">'+userName+'</a><a class="my_video_course" href="{{ URL::route(\'wx.my-course\') }}">我的微课</a>';
         $('.footer').html(str)
     }
@@ -89,7 +88,6 @@ $('.bind_submit').on('click', function() {
  * 获取用户信息
  */
 function getUserMsg() {
-    var userName = '';
     $.ajax({
         type: 'GET',
         url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/stu/stu-msg',
@@ -100,7 +98,6 @@ function getUserMsg() {
         success: function (res) {
             if (1 === res.code) {
                 window.localStorage.setItem('yj_wx_user_name', res.data.name);
-                userName = res.data.name;
                 $('.name').text(res.data.name);
                 $('.stuname').text(res.data.name);
                 $('.grade_class').text(res.data.grade_class);
@@ -110,7 +107,6 @@ function getUserMsg() {
             }
         }
     });
-    return userName;
 }
 
 /**
