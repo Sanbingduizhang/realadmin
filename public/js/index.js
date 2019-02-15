@@ -46,7 +46,7 @@ function getSearchObj() {
 $('.bind_submit').on('click', function() {
   $.ajax({
     type: 'POST',
-    url: 'http://10.10.10.111:1182//api/admin/login?login_name='+ $('#name').val()+'&password='+ $('#pwd').val(),
+    url: window.MAIN_CONFIG.USEFULL_API + '/api/admin/login?login_name='+ $('#name').val()+'&password='+ $('#pwd').val(),
     dataType: 'json',
     success: function(result) {
       if (result.status_code === 200) {
