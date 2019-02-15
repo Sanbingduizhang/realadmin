@@ -42,14 +42,19 @@ function getSearchObj() {
 /*------------------------------------- 账号绑定与解绑页  ------------------------------------------------*/
 
 //如果已经绑定，跳转到成功绑定的页面，设置token值
-var yj_token_wx = $("#yj_token_wx").val();
-if (yj_token_wx) {
-    window.localStorage.setItem('yj_wx_token',yj_token_wx);
-    $('.module_bind_account').removeClass('module_show').addClass('module_hide');
-    $('.module_bind_success').removeClass('module_hide').addClass('module_show');
-    getUserMsg();
-}
 
+function setUserMsg() {
+    var yj_token_wx = $("#yj_token_wx").val();
+    if (yj_token_wx) {
+        window.localStorage.setItem('yj_wx_token',yj_token_wx);
+        $('.module_bind_account').removeClass('module_show').addClass('module_hide');
+        $('.module_bind_success').removeClass('module_hide').addClass('module_show');
+        getUserMsg();
+        var str = '<a href="javascript:void(0);">'+result.data.name+'</a><a class="my_video_course" href="{{ URL::route(\'wx.my-course\') }}">我的微课</a>';
+        $('.footer').html(str)
+    }
+}
+setUserMsg();
 
 /**
  * 确定 绑定
@@ -63,14 +68,13 @@ $('.bind_submit').on('click', function() {
     success: function(result) {
       if (result.code === 1) {
 
-        window.localStorage.setItem('yj_wx_token',result.data.token);
-
         $('.header>.title').text('绑定成功');
-        $('.module_bind_account').removeClass('module_show').addClass('module_hide');
-        $('.module_bind_success').removeClass('module_hide').addClass('module_show');
-        getUserMsg();
-        var str = '<a href="javascript:void(0);">'+result.data.name+'</a><a class="my_video_course" href="./my_course.html">我的微课</a>';
-        $('.footer').html(str)
+        setUserMsg();
+        // $('.module_bind_account').removeClass('module_show').addClass('module_hide');
+        // $('.module_bind_success').removeClass('module_hide').addClass('module_show');
+        // getUserMsg();
+        // var str = '<a href="javascript:void(0);">'+result.data.name+'</a><a class="my_video_course" href="./my_course.html">我的微课</a>';
+        // $('.footer').html(str)
       } else{
         alert("账号或密码错误！");
       }
