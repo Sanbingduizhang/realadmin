@@ -61,27 +61,28 @@ setUserMsg();
 /**
  * 确定 绑定
  */
-$('.bind_submit').on('click', function() {
-  $.ajax({
-    type: 'POST',
-    // url: window.MAIN_CONFIG.USEFULL_API + '/api/admin/login?login_name='+ $('#name').val()+'&password='+ $('#pwd').val(),
-    url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/set-user?usercode=' + $('#name').val() + '&password=' + $('#pwd').val() + '&openid=' + $('#openid').val(),
-    dataType: 'json',
-    success: function(result) {
-      if (result.code === 1) {
+$('.bind_submit').on('click', function () {
+    $.ajax({
+        type: 'POST',
+        // url: window.MAIN_CONFIG.USEFULL_API + '/api/admin/login?login_name='+ $('#name').val()+'&password='+ $('#pwd').val(),
+        url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/set-user?usercode=' + $('#name').val() + '&password=' + $('#pwd').val() + '&openid=' + $('#openid').val(),
+        dataType: 'json',
+        success: function (result) {
+            if (result.code === 1) {
 
-        $('.header>.title').text('绑定成功');
-        setUserMsg();
-        // $('.module_bind_account').removeClass('module_show').addClass('module_hide');
-        // $('.module_bind_success').removeClass('module_hide').addClass('module_show');
-        // getUserMsg();
-        // var str = '<a href="javascript:void(0);">'+result.data.name+'</a><a class="my_video_course" href="./my_course.html">我的微课</a>';
-        // $('.footer').html(str)
-      } else{
-        alert("账号或密码错误！");
-      }
-    }
-  })
+                $('.header>.title').text('绑定成功');
+                $("#yj_token_wx").val(result.data.token);
+                setUserMsg();
+                // $('.module_bind_account').removeClass('module_show').addClass('module_hide');
+                // $('.module_bind_success').removeClass('module_hide').addClass('module_show');
+                // getUserMsg();
+                // var str = '<a href="javascript:void(0);">'+result.data.name+'</a><a class="my_video_course" href="./my_course.html">我的微课</a>';
+                // $('.footer').html(str)
+            } else {
+                alert("账号或密码错误！");
+            }
+        }
+    })
 })
 
 
