@@ -105,7 +105,7 @@ class WxController extends Controller
             [
                 "type" => "view",
                 "name" => "我的微课",
-                "url" => "http://148.70.67.47/mylubo.html"
+                "url" => "http://148.70.67.47/api/wx/my-course"
             ],
             [
                 "type" => "view",
