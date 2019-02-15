@@ -81,11 +81,11 @@
     </div>
   </div>
   <!-- 视频列表 END -->
-  <input type="text" value="{{ $yj_wx_token }}" id="yj_token_wx" style="display: none;">
+  <input type="text" value="{{ $yj_wx_token }}" id="yj_token_wx"  checkpage="false" style="display: none;">
   <input type="text" value="{{ $yj_wx_name }}" id="yj_token_user_name" style="display: none;">
 
   <footer class="footer">
-    <a href="{{ URL::route('wx.bind-sucess',['openid' => $openid]) }}">陈晓梅</a><a class="my_video_course" href="{{ URL::route('wx.my-course',['openid' => $openid]) }}">我的微课</a>
+    <a href="{{ URL::route('wx.bind-acount') }}">{{ $yj_wx_name }}</a><a class="my_video_course" href="{{ URL::route('wx.my-course') }}">我的微课</a>
   </footer>
   
 <script src="{{ URL::asset('js/zeptojs1.2.comzepto.min.js') }}"></script>

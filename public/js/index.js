@@ -45,7 +45,10 @@ function getSearchObj() {
 
 function setUserMsg() {
     var yj_token_wx = $("#yj_token_wx").val();
-    if (yj_token_wx) {
+
+    var checkpage = $("#yj_token_wx").attr('checkpage');
+
+    if (yj_token_wx && checkpage) {
         window.localStorage.setItem('yj_wx_token', yj_token_wx);
         $('.module_bind_account').removeClass('module_show').addClass('module_hide');
         $('.module_bind_success').removeClass('module_hide').addClass('module_show');
