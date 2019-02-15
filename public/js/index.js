@@ -50,6 +50,8 @@ function setUserMsg() {
         $('.module_bind_account').removeClass('module_show').addClass('module_hide');
         $('.module_bind_success').removeClass('module_hide').addClass('module_show');
         var userName = getUserMsg();
+        console.log(userName);
+        console.log(window.localStorage.getItem('yj_wx_token'));
         var str = '<a href="javascript:void(0);">'+userName+'</a><a class="my_video_course" href="{{ URL::route(\'wx.my-course\') }}">我的微课</a>';
         $('.footer').html(str)
     }
