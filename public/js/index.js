@@ -50,11 +50,11 @@ $('.bind_submit').on('click', function() {
     url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/set-user?usercode=' + $('#name').val() + '&password=' + $('#pwd').val() + '&openid=' + $('#openid').val(),
     dataType: 'json',
     success: function(result) {
-      if (result.status_code === 200) {
+      if (result.code === 1) {
         $('.header>.title').text('绑定成功');
         $('.module_bind_account').removeClass('module_show').addClass('module_hide');
         $('.module_bind_success').removeClass('module_hide').addClass('module_show');
-        var str = '<a href="javascript:void(0);">陈晓梅</a><a class="my_video_course" href="./my_course.html">我的微课</a>';
+        var str = '<a href="javascript:void(0);">result.data.name</a><a class="my_video_course" href="{{ URL::route(\'wx.my-course\',[\'openid\' => $openid]) }}">我的微课</a>';
         $('.footer').html(str)
       } else{
         alert("账号或密码错误！");
