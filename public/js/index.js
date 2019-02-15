@@ -117,12 +117,30 @@ function getUserMsg() {
 /**
  * 取消 绑定
  */
-$('.un_bind_submit').on('click', function() {
-  $('.header>.title').text('绑定账号');
-  var str = '<a href="javascript: void(0);">绑定账号</a><a class="my_video_course" href="javascript:void(0)">我的微课</a>';
-  $('.footer').html(str);
-  $('.module_bind_account').removeClass('module_hide').addClass('module_show');
-  $('.module_bind_success').removeClass('module_show').addClass('module_hide');
+$('.un_bind_submit').on('click', function () {
+    $.ajax({
+        type: 'GET',
+        url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/stu/unbind-user',
+        dataType: 'json',
+        beforeSend: function (request) {
+            request.setRequestHeader('Authorization', "Bearer " + window.localStorage.getItem('yj_wx_token'));
+        },
+        success: function (res) {
+            if (1 === res.code) {
+                alert("成功！");
+                $('.header>.title').text('绑定账号');
+                var str = '<a href="javascript: void(0);">绑定账号</a><a class="my_video_course" href="javascript:void(0)">我的微课</a>';
+                $('.footer').html(str);
+                window.localStorage.removeItem('yj_wx_token');
+                window.localStorage.removeItem('yj_wx_user_name');
+                $('.module_bind_account').removeClass('module_hide').addClass('module_show');
+                $('.module_bind_success').removeClass('module_show').addClass('module_hide');
+            } else {
+                alert('网络错误！');
+                return false;
+            }
+        }
+    });
 })
 
 /*------------------------------------- 科目列表页  ------------------------------------------------*/
