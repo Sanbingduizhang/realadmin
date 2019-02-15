@@ -81,7 +81,7 @@
     </div>
   </div>
   <!-- 视频列表 END -->
-  <input type="text" value="{{ $yj_wx_token }}" id="yj_token_wx"  checkpage="false" style="display: none;">
+  <input type="text" value="{{ $yj_wx_token }}" id="yj_wx_token"  checkpage="false" style="display: none;">
   <input type="text" value="{{ $yj_wx_name }}" id="yj_token_user_name" style="display: none;">
 
   <footer class="footer">

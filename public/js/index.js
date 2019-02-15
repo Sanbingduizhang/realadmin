@@ -54,6 +54,8 @@ function setUserMsg() {
         $('.module_bind_success').removeClass('module_hide').addClass('module_show');
         getUserMsg();
         var userName = window.localStorage.getItem('yj_wx_user_name');
+        console.log(userName)
+        console.log(window.localStorage.getItem('yj_wx_user_name'))
         var newHref = $(".coursego").attr('href');
         var str = '<a href="javascript:void(0);">' + userName + '</a><a class="my_video_course" href="' + newHref + '">我的微课</a>';
         $('.footer').html(str)
