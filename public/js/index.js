@@ -51,10 +51,14 @@ $('.bind_submit').on('click', function() {
     dataType: 'json',
     success: function(result) {
       if (result.code === 1) {
+
+        window.localStorage.setItem('yj_wx_token',result.data.token);
+
         $('.header>.title').text('绑定成功');
         $('.module_bind_account').removeClass('module_show').addClass('module_hide');
         $('.module_bind_success').removeClass('module_hide').addClass('module_show');
-        var str = '<a href="javascript:void(0);">result.data.name</a><a class="my_video_course" href="{{ URL::route(\'wx.my-course\',[\'openid\' => $openid]) }}">我的微课</a>';
+        getUserMsg();
+        var str = '<a href="javascript:void(0);">'+result.data.name+'</a><a class="my_video_course" href="./my_course.html">我的微课</a>';
         $('.footer').html(str)
       } else{
         alert("账号或密码错误！");
@@ -62,6 +66,32 @@ $('.bind_submit').on('click', function() {
     }
   })
 })
+
+
+/**
+ * 获取用户信息
+ */
+function getUserMsg() {
+    $.ajax({
+        type: 'GET',
+        url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/stu/stu-msg',
+        dataType: 'json',
+        beforeSend: function (request) {
+            request.setRequestHeader('Authorization', "Bearer " + window.localStorage.getItem('yj_wx_token'));
+        },
+        success: function (res) {
+            if (1 === res.code) {
+                $('.name').text(res.data.name);
+                $('.stuname').text(res.data.name);
+                // window.localStorage.setItem('yj_wx_user_name',res.data.name);
+                $('.grade_class').text(res.data.grade_class);
+            } else {
+                alert('网络错误！');
+                return false;
+            }
+        }
+    });
+}
 
 /**
  * 取消 绑定
