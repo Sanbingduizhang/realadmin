@@ -46,7 +46,8 @@ function getSearchObj() {
 $('.bind_submit').on('click', function() {
   $.ajax({
     type: 'POST',
-    url: window.MAIN_CONFIG.USEFULL_API + '/api/admin/login?login_name='+ $('#name').val()+'&password='+ $('#pwd').val(),
+    // url: window.MAIN_CONFIG.USEFULL_API + '/api/admin/login?login_name='+ $('#name').val()+'&password='+ $('#pwd').val(),
+    url: window.MAIN_CONFIG.USEFULL_API + '/api/wx/set-user?usercode=' + $('#name').val() + '&password=' + $('#pwd').val() + '&openid=' + $('#openid').val(),
     dataType: 'json',
     success: function(result) {
       if (result.status_code === 200) {
