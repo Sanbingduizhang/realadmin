@@ -45,8 +45,12 @@ function getSearchObj() {
 var yj_token_wx = $("#yj_token_wx").val();
 if (yj_token_wx) {
     window.localStorage.setItem('yj_wx_token',yj_token_wx);
+    $('.module_bind_account').removeClass('module_show').addClass('module_hide');
+    $('.module_bind_success').removeClass('module_hide').addClass('module_show');
     getUserMsg();
 }
+
+
 /**
  * 确定 绑定
  */
