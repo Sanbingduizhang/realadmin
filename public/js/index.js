@@ -9,7 +9,8 @@
 })('MAIN_CONFIG', function () {
 
   return {
-    USEFULL_API: 'http://10.10.10.167', // 接口开头数据
+    //USEFULL_API: 'http://10.10.10.167', // 接口开头数据
+    USEFULL_API: 'http://www.ischool365.com:16780', // 接口开头数据
     Authorization: "100141101+16+gZK6aaZUf6+oSAUb0lOEfQu8Q_up87ZsyAp_GUU",
     PAGE_LINE: 10,
     CUR_PAGE: 0, // 记录视频列表页的页码，首次进入列表页，归1
