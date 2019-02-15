@@ -45,6 +45,7 @@ function getSearchObj() {
 var yj_token_wx = $("#yj_token_wx").val();
 if (yj_token_wx) {
     window.localStorage.setItem('yj_wx_token',yj_token_wx);
+    getUserMsg();
 }
 /**
  * 确定 绑定
