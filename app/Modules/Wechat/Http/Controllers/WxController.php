@@ -133,7 +133,7 @@ class WxController extends Controller
 
         $bindRes = $this->openidAuth($user->getId());
         if ($bindRes == 2) {
-            return view('lubo_oa.bind_acount',['openid' => $user->getId()]);
+            return view('lubo_oa.bind_acount',['openid' => $user->getId(),'yj_wx_token' => '']);
         }
 
         Log::info($user->getId());
