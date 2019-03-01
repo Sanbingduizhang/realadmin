@@ -4,12 +4,6 @@
  * 获取用户信息
  * @return mixed
  */
-//function getUser()
-//{
-//    return \Cache::store('array')->get('user');
-//}
-
-
 
 if (!function_exists('response_success')) {
     /**
@@ -57,16 +51,12 @@ if (!function_exists('pageGo')) {
     }
 }
 
-if (!function_exists('getUser')) {
-    /**获取用户信息
-     * @param \Illuminate\Http\Request $request
-     * @return mixed
-     */
-    function getUser(\Illuminate\Http\Request $request)
-    {
-        return $request->get('user_msg');
-    }
+
+function getUser(\Illuminate\Http\Request $request)
+{
+    return $request->get('user_msg');
 }
+
 if (!function_exists('get_or_check_captcha')) {
     /**
      * 获取/检测验证码
