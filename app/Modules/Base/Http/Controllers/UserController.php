@@ -29,6 +29,7 @@ class UserController extends ApiBaseController
             ->where(['id' => $userArr['id'],'status' => UserInfo::STATUS_SHIYONG])
             ->first();
 
+        dd($userArr);
         if (empty($users)) {
             return response_failed('暂时查询不到当前用户');
         }

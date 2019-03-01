@@ -4,10 +4,10 @@
  * 获取用户信息
  * @return mixed
  */
-function getUser()
-{
-    return \Cache::store('array')->get('user');
-}
+//function getUser()
+//{
+//    return \Cache::store('array')->get('user');
+//}
 
 
 
