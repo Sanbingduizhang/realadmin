@@ -1,0 +1,338 @@
+/*
+    date: 20190128
+    purpose: 录播公众号内嵌页
+    auth: lijingxia
+    comment:
+        Points Pixels Ems Percent
+        12pt   16px   1em 100%
+        0.625em = 10px
+        1em     = 16px
+*/
+html {
+  width: 100%;
+  height: 100%;
+}
+body {
+    position: relative;
+    /* padding: 0 0.2em; */
+    font-size: 12pt;
+    font-family: arial, "Microsoft Yahei", 微软雅黑;
+    width: 100%;
+    height: auto;
+}
+/* ----------------------------------------------- mixin ------------------------------------------------ */
+.text_ellipsis {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+a {
+  text-decoration: none;
+}
+.btn {
+  margin: 0 auto;
+  margin-top: 1.5em;
+  width: 7.8em;
+  height: 2.2em;
+  line-height: 2.2em;
+  background: #3baff1;
+  color: #fff;
+  border-radius: 6px;
+  letter-spacing: 5px;
+}
+.root_wrap {
+  margin: 3em 0;
+}
+.color_333 {
+  color: #333!important;
+}
+.color_dbdbdb {
+  color: #dbdbdb!important;
+}
+.no_data_text {
+  text-align: center;
+  color: #dbdbdb;
+  font-size: 1em;
+  line-height: 2em;
+  border-top: 1px dashed #dbdbdb;
+}
+/* ----------------------------------------------- 页头 ------------------------------------------------ */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2.5em;
+  line-height: 2.5em;
+  background: #e8e8e8;
+  color: #333;
+  z-index: 999;
+}
+.header .icon_back {
+  position: absolute;
+  top: 0.3em;
+  left: 0.3em;
+  background-position: -248px 0px;
+}
+.header .icon_share {
+  position: absolute;
+  top: 0.3em;
+  right: 0.5em;
+  background-position: -212px 0px;
+}
+.header .title {
+  top: 0;
+  left: 2em;
+  position: absolute;
+  width: calc(100% - 6em);
+  text-align: center;
+}
+
+/* ----------------------------------------------- 页脚 ------------------------------------------------ */
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 2.8em;
+  border-top: 1px solid #dbdbdb;
+  background: #fff;
+  z-index: 999;
+}
+.footer a {
+  display: inline-block;
+  width: 50%;
+  height: 2.8em;
+  line-height: 2.8em;
+  color: #333;
+  text-align: center;
+}
+.footer a:first-child {
+  width: 49%;
+  border-right: 1px solid #dbdbdb;
+}
+/* ----------------------------------------------- icon ------------------------------------------------ */
+.icon {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  background-image: url(../images/lubo_icon.png);
+  background-repeat: no-repeat;
+}
+.icon_user {
+  background-position: 0 0;
+}
+.icon_user_active{
+  background-position: -38px 0;
+}
+.icon_pwd{
+  background-position: -80px 0;
+}
+.icon_pwd_active{
+  background-position: -121px 0;
+}
+/* .moudle_scan_wrap {
+    margin: 0 auto;
+    margin-top: 1em;
+}
+.video_content {
+    margin: 0 auto;
+    width: 100%;
+    height: 18em;
+}
+.nav_item {
+    display: inline-block;
+    width: 5em;
+    height: 3.8em;
+}
+.nav_img {
+    width: 4.6em!important;
+    height: 3.8em!important;
+    border-radius: 0.4em;
+}
+.detail_show {
+    margin-top: 20px;
+    padding: 0.8em;
+    border-top: 1px solid #eee;
+}
+.detail_show dt {
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.875em;
+}
+.detail_show dd {
+    margin-top: 0.6em;
+    padding-left: 1em;
+} */
+
+
+/* ----------------- 图片切换插件style.css 样式覆盖 START ----------------- */
+/* .page_guide_balloon {
+    display: none;
+}
+.page_guide_title {
+    height: 0;
+}
+.page_guide_items {
+    height: 5.2em;
+}
+.page_guide_item {
+    margin: 0;
+    border: none;
+    background: #dedede;
+}
+.page_guide_item_image {
+    height: 3.9em;
+} */
+/* ----------------- 图片切换插件style.css 样式覆盖 END ----------------- */
+
+/* ----------------------------------------------- 账号绑定页 ------------------------------------------------ */
+.bind_account_wrapper {
+  position: relative;
+  margin: 0 auto;
+  margin-top: 4em;
+  padding-top: 2em;
+  width: 20em;
+  height: 18em;
+  text-align: center;
+}
+.login_logo {
+  margin-top: -2em;
+  width: 5em;
+  height: 5em;
+  z-index:9;
+}
+.bind_form {
+  padding: 3em 0;
+  border-radius: 4px;
+  box-shadow: -2px 0px 5px 1px #eee,0px -2px 5px 1px #eee,2px 0px 5px 1px #eee,0px 2px 5px 1px #eee;
+  margin-top: -3em;
+  background: #fff;
+}
+.form_row {
+  margin: 0 2em;
+  width: 80%;
+  height: 3em;
+  line-height: 4em;
+  border-bottom: 1px solid #dbdbdb;
+}
+.form_row p {
+  display: inline-block;
+  line-height: 1.5em;
+  color: #333;
+  margin-left: 0.6em;
+  font-size: 16px;
+}
+input:-webkit-autofill {
+  transition:background-color 5000s ease-in-out 0s;
+}
+input:focus {
+  transition:background-color 5000s ease-in-out 0s;
+  outline:medium;
+  color: #333;
+}
+.input_style_update {
+  font-size: 16px;
+  height: 2em;
+  margin-left: 0.5em;
+  -webkit-background-color: #fff!important;
+  background-color: #fff!important;
+  /* color: #dbdbdb!important; */
+  border: none!important;
+  padding-left: 0.5em;
+}
+
+/* ----------------------------------------------- 绑定成功页 ------------------------------------------------ */
+.bind_sucess .form_row {
+  padding-left: 2em;
+  border-bottom: none;
+  text-align: left;
+}
+.bind_sucess .form_row:first-child {
+  margin-top: 2em;
+}
+.bind_sucess {
+  height: 13em;
+  text-align: right;
+  border: 6px solid #3baff1;
+  border-radius: 6px;
+  background: #fff;
+}
+.move_book {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 5em;
+  height: 5em;
+  z-index: 9;
+}
+/* ----------------------------------------------- 我的课程页 ------------------------------------------------ */
+/* .course_list {
+  padding: 1.1em 0 0 1em;
+} */
+.course_list .course_item {
+  float: left;
+  position: relative;
+  padding: 1em 1em 0 1em;
+  width: 25%;
+  height: auto;
+  text-align: center;
+  box-sizing: border-box;
+  color: #333;
+  font-size: 1em;
+}
+.course_item .notice {
+  position: absolute;
+  top: 0.5em;
+  right: 0.9em;
+  width: 2em;
+  height: 2em;
+  line-height: 2em;
+  background: #fd5a5a;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 10px;
+  z-index: 9;
+}
+.course_list .icon_cover {
+  width: 100%;
+  height: auto;
+}
+/* ----------------------------------------------- 视频列表页 ------------------------------------------------ */
+.video_list {
+  width: 100%;
+  height: calc(100% - 6em);
+  overflow-y: scroll;
+}
+.video_list .item {
+  margin: 1em 0;
+  padding: 1em 1em 0.2em 1em;
+  background: #fff;
+}
+.video_list .item .detail{
+  height: 2em;
+  line-height: 2em;
+}
+.video_list .item .video_content {
+  margin: 0 auto;
+  width: 100%;
+  height: 12em;
+}
+.video_list .item p {
+  display: inline-block;
+  height: 1em;
+  line-height: 1em;
+}
+.video_list .item .title {
+  width: calc(100% - 6.5em);
+  color: #333;
+  font-size: 14px;
+  text-align: left;
+}
+.video_list .item .date {
+  margin-left: 0.5em;
+  width: 6em;
+  color: #333;
+  font-size: 12px;
+  text-align: right;
+  color: #999;
+}
+/* ----------------------------------------------- 视频播放页 ------------------------------------------------ */

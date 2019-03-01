@@ -53,10 +53,7 @@ class WechatController extends Controller
             ]
         ];
         foreach ($paramArr as $k => $v) {
-
             //生成相关模板数据格式
-//            $sendArr['template_id'] = "WkyesmEZqKqxvfdglBWmxDyZy4SNweGyd2MfqJS9Pzg";
-//            $sendArr['url'] = "https://www.nblistener.com/video.php?videourl=" . "{$v['vUrl']}";
 
             $sendArr['template_id'] = env('WECHAT_TEMPALTE_ID','WkyesmEZqKqxvfdglBWmxDyZy4SNweGyd2MfqJS9Pzg');
             $sendArr['url'] = env('WECHAT_VIDEO_PALY',"https://www.nblistener.com/video.php?videourl=") . "{$v['vUrl']}";
