@@ -15,7 +15,7 @@ return [
     'supportsCredentials' => false,
     'allowedOrigins' => [env('CROS_ACCESS','http://148.70.67.47')],
 //    'allowedOriginsPatterns' => [],
-    'allowedHeaders' => ['Authorization','Content-Type', 'X-Requested-With'],
+    'allowedHeaders' => ['*'],
     'allowedMethods' => ['GET', 'POST', 'PUT',  'DELETE', 'OPTIONS'],
     'exposedHeaders' => [],
     'maxAge' => 86400,
