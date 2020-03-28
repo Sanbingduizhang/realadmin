@@ -11,7 +11,6 @@
 
 namespace Overtrue\Socialite\Providers;
 
-use Overtrue\Socialite\AccessToken;
 use Overtrue\Socialite\AccessTokenInterface;
 use Overtrue\Socialite\InvalidArgumentException;
 use Overtrue\Socialite\ProviderInterface;
@@ -133,7 +132,7 @@ class WeChatProvider extends AbstractProvider implements ProviderInterface
     protected function getCodeFields($state = null)
     {
         if ($this->component) {
-            $this->with(['component_appid' => $this->component->getAppId()]);
+            $this->with(array_merge($this->parameters, ['component_appid' => $this->component->getAppId()]));
         }
 
         return array_merge([

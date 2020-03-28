@@ -67,6 +67,7 @@ class BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function request(string $endpoint, array $params = [], $method = 'post', array $options = [], $returnResponse = false)
     {
@@ -77,9 +78,14 @@ class BaseClient
             'sub_appid' => $this->app['config']['sub_appid'],
         ];
 
-        $params = array_filter(array_merge($base, $this->prepends(), $params));
+        $params = array_filter(array_merge($base, $this->prepends(), $params), 'strlen');
 
-        $params['sign'] = Support\generate_sign($params, $this->app->getKey($endpoint));
+        $secretKey = $this->app->getKey($endpoint);
+
+        $encryptMethod = Support\get_encrypt_method(Support\Arr::get($params, 'sign_type', 'MD5'), $secretKey);
+
+        $params['sign'] = Support\generate_sign($params, $secretKey, $encryptMethod);
+
         $options = array_merge([
             'body' => Support\XML::build($params),
         ], $options);
@@ -115,10 +121,35 @@ class BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function requestRaw($endpoint, array $params = [], $method = 'post', array $options = [])
+    protected function requestRaw(string $endpoint, array $params = [], $method = 'post', array $options = [])
     {
-        return $this->request($endpoint, $params, $method, $options, true);
+        /** @var ResponseInterface $response */
+        $response = $this->request($endpoint, $params, $method, $options, true);
+
+        return $response;
+    }
+
+    /**
+     * Make a request and return an array.
+     *
+     * @param string $endpoint
+     * @param array  $params
+     * @param string $method
+     * @param array  $options
+     *
+     * @return array
+     *
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    protected function requestArray(string $endpoint, array $params = [], $method = 'post', array $options = []): array
+    {
+        $response = $this->requestRaw($endpoint, $params, $method, $options);
+
+        return $this->castResponseToType($response, 'array');
     }
 
     /**
@@ -133,6 +164,7 @@ class BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function safeRequest($endpoint, array $params, $method = 'post', array $options = [])
     {

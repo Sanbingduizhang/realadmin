@@ -57,6 +57,9 @@ class Solver
     /** @var array */
     protected $learnedWhy = array();
 
+    /** @var bool */
+    public $testFlagLearnedPositiveLiteral = false;
+
     /** @var IOInterface */
     protected $io;
 
@@ -470,7 +473,10 @@ class Solver
                 unset($seen[abs($literal)]);
 
                 if ($num && 0 === --$num) {
-                    $learnedLiterals[0] = -abs($literal);
+                    if ($literal < 0) {
+                        $this->testFlagLearnedPositiveLiteral = true;
+                    }
+                    $learnedLiterals[0] = -$literal;
 
                     if (!$l1num) {
                         break 2;
@@ -673,7 +679,6 @@ class Solver
          */
 
         $decisionQueue = array();
-        $decisionSupplementQueue = array();
         /**
          * @todo this makes $disableRules always false; determine the rationale and possibly remove dead code?
          */
@@ -681,7 +686,6 @@ class Solver
 
         $level = 1;
         $systemLevel = $level + 1;
-        $installedPos = 0;
 
         while (true) {
             if (1 === $level) {

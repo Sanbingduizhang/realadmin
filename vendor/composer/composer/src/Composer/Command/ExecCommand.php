@@ -36,6 +36,13 @@ class ExecCommand extends BaseCommand
                     'Arguments to pass to the binary. Use <info>--</info> to separate from composer arguments'
                 ),
             ))
+            ->setHelp(
+                <<<EOT
+Executes a vendored binary/script.
+
+Read more at https://getcomposer.org/doc/03-cli.md#exec
+EOT
+            )
         ;
     }
 
@@ -83,6 +90,17 @@ EOT
         $dispatcher->addListener('__exec_command', $binary);
         if ($output->getVerbosity() === OutputInterface::VERBOSITY_NORMAL) {
             $output->setVerbosity(OutputInterface::VERBOSITY_QUIET);
+        }
+
+        // If the CWD was modified, we restore it to what it was initially, as it was
+        // most likely modified by the global command, and we want exec to run in the local working directory
+        // not the global one
+        if (getcwd() !== $this->getApplication()->getInitialWorkingDirectory()) {
+            try {
+                chdir($this->getApplication()->getInitialWorkingDirectory());
+            } catch (\Exception $e) {
+                throw new \RuntimeException('Could not switch back to working directory "'.$this->getApplication()->getWorkingDirectory().'"', 0, $e);
+            }
         }
 
         return $dispatcher->dispatchScript('__exec_command', true, $input->getArgument('args'));

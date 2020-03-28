@@ -56,6 +56,7 @@ package in the specified version and writes it to the specified directory.
 
 <info>php composer.phar archive [--format=zip] [--dir=/foo] [package [version]]</info>
 
+Read more at https://getcomposer.org/doc/03-cli.md#archive
 EOT
             )
         ;
@@ -63,13 +64,19 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = Factory::createConfig();
         $composer = $this->getComposer(false);
+        $config = null;
+
         if ($composer) {
+            $config = $composer->getConfig();
             $commandEvent = new CommandEvent(PluginEvents::COMMAND, 'archive', $input, $output);
             $eventDispatcher = $composer->getEventDispatcher();
             $eventDispatcher->dispatch($commandEvent->getName(), $commandEvent);
             $eventDispatcher->dispatchScript(ScriptEvents::PRE_ARCHIVE_CMD);
+        }
+
+        if (!$config) {
+            $config = Factory::createConfig();
         }
 
         if (null === $input->getOption('format')) {

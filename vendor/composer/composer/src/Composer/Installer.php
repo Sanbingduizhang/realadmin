@@ -35,6 +35,7 @@ use Composer\IO\IOInterface;
 use Composer\Package\AliasPackage;
 use Composer\Package\BasePackage;
 use Composer\Package\CompletePackage;
+use Composer\Package\CompletePackageInterface;
 use Composer\Package\Link;
 use Composer\Package\Loader\ArrayLoader;
 use Composer\Package\Dumper\ArrayDumper;
@@ -118,7 +119,7 @@ class Installer
     protected $preferStable = false;
     protected $preferLowest = false;
     protected $skipSuggest = false;
-    protected $writeLock = true;
+    protected $writeLock;
     protected $executeOperations = true;
 
     /**
@@ -164,6 +165,8 @@ class Installer
         $this->installationManager = $installationManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->autoloadGenerator = $autoloadGenerator;
+
+        $this->writeLock = $config->get('lock');
     }
 
     /**
@@ -197,8 +200,8 @@ class Installer
         }
 
         if ($this->runScripts) {
-            $devMode = (int) $this->devMode;
-            putenv("COMPOSER_DEV_MODE=$devMode");
+            $_SERVER['COMPOSER_DEV_MODE'] = (int) $this->devMode;
+            putenv('COMPOSER_DEV_MODE='.$_SERVER['COMPOSER_DEV_MODE']);
 
             // dispatch pre event
             $eventName = $this->update ? ScriptEvents::PRE_UPDATE_CMD : ScriptEvents::PRE_INSTALL_CMD;
@@ -231,13 +234,13 @@ class Installer
                 return $res;
             }
         } catch (\Exception $e) {
-            if ($this->executeOperations) {
+            if ($this->executeOperations && $this->config->get('notify-on-install')) {
                 $this->installationManager->notifyInstalls($this->io);
             }
 
             throw $e;
         }
-        if ($this->executeOperations) {
+        if ($this->executeOperations && $this->config->get('notify-on-install')) {
             $this->installationManager->notifyInstalls($this->io);
         }
 
@@ -309,13 +312,24 @@ class Installer
             foreach ($localRepo->getPackages() as $package) {
                 $this->installationManager->ensureBinariesPresence($package);
             }
+        }
 
-            $vendorDir = $this->config->get('vendor-dir');
-            if (is_dir($vendorDir)) {
-                // suppress errors as this fails sometimes on OSX for no apparent reason
-                // see https://github.com/composer/composer/issues/4070#issuecomment-129792748
-                @touch($vendorDir);
+        $fundingCount = 0;
+        foreach ($localRepo->getPackages() as $package) {
+            if ($package instanceof CompletePackageInterface && !$package instanceof AliasPackage && $package->getFunding()) {
+                $fundingCount++;
             }
+        }
+        if ($fundingCount) {
+            $this->io->writeError(array(
+                sprintf(
+                    "<info>%d package%s you are using %s looking for funding.</info>",
+                    $fundingCount,
+                    1 === $fundingCount ? '' : 's',
+                    1 === $fundingCount ? 'is' : 'are'
+                ),
+                '<info>Use the `composer fund` command to find out more!</info>',
+            ));
         }
 
         if ($this->runScripts) {
@@ -447,7 +461,7 @@ class Installer
             $this->io->writeError('<info>Installing dependencies'.($this->devMode ? ' (including require-dev)' : '').' from lock file</info>');
 
             if (!$this->locker->isFresh()) {
-                $this->io->writeError('<warning>Warning: The lock file is not up to date with the latest changes in composer.json. You may be getting outdated dependencies. Run update to update them.</warning>', true, IOInterface::QUIET);
+                $this->io->writeError('<warning>Warning: The lock file is not up to date with the latest changes in composer.json. You may be getting outdated dependencies. It is recommended that you run `composer update` or `composer update <package name>`.</warning>', true, IOInterface::QUIET);
             }
 
             foreach ($lockedRepository->getPackages() as $package) {
@@ -473,6 +487,8 @@ class Installer
         $solver = new Solver($policy, $pool, $installedRepo, $this->io);
         try {
             $operations = $solver->solve($request, $this->ignorePlatformReqs);
+            $ruleSetSize = $solver->getRuleSetSize();
+            $solver = null;
         } catch (SolverProblemsException $e) {
             $this->io->writeError('<error>Your requirements could not be resolved to an installable set of packages.</error>', true, IOInterface::QUIET);
             $this->io->writeError($e->getMessage());
@@ -489,7 +505,7 @@ class Installer
         $this->eventDispatcher->dispatchInstallerEvent(InstallerEvents::POST_DEPENDENCIES_SOLVING, $this->devMode, $policy, $pool, $installedRepo, $request, $operations);
 
         $this->io->writeError("Analyzed ".count($pool)." packages to resolve dependencies", true, IOInterface::VERBOSE);
-        $this->io->writeError("Analyzed ".$solver->getRuleSetSize()." rules to resolve dependencies", true, IOInterface::VERBOSE);
+        $this->io->writeError("Analyzed ".$ruleSetSize." rules to resolve dependencies", true, IOInterface::VERBOSE);
 
         // execute operations
         if (!$operations) {
@@ -625,6 +641,16 @@ class Installer
             // force source/dist urls to be updated for all packages
             $this->processPackageUrls($pool, $policy, $localRepo, $repositories);
             $localRepo->write();
+        }
+
+        // see https://github.com/composer/composer/issues/2764
+        if ($operations) {
+            $vendorDir = $this->config->get('vendor-dir');
+            if (is_dir($vendorDir)) {
+                // suppress errors as this fails sometimes on OSX for no apparent reason
+                // see https://github.com/composer/composer/issues/4070#issuecomment-129792748
+                @touch($vendorDir);
+            }
         }
 
         return array(0, $devPackages);
@@ -1176,7 +1202,7 @@ class Installer
                     $newReference = $rootRefs[$package->getName()];
                 }
 
-                $this->updatePackageUrl($package, $newSourceUrl, $newPackage->getSourceType(), $newReference, $newPackage->getDistUrl());
+                $this->updatePackageUrl($package, $newSourceUrl, $newPackage->getSourceType(), $newReference, $newPackage->getDistUrl(), $newPackage->getDistType(), $newPackage->getDistSha1Checksum());
 
                 if ($package instanceof CompletePackage && $newPackage instanceof CompletePackage) {
                     $package->setAbandoned($newPackage->getReplacementPackage() ?: $newPackage->isAbandoned());
@@ -1184,11 +1210,12 @@ class Installer
 
                 $package->setDistMirrors($newPackage->getDistMirrors());
                 $package->setSourceMirrors($newPackage->getSourceMirrors());
+                $package->setTransportOptions($newPackage->getTransportOptions());
             }
         }
     }
 
-    private function updatePackageUrl(PackageInterface $package, $sourceUrl, $sourceType, $sourceReference, $distUrl)
+    private function updatePackageUrl(PackageInterface $package, $sourceUrl, $sourceType, $sourceReference, $distUrl, $distType, $distShaSum)
     {
         $oldSourceRef = $package->getSourceReference();
 
@@ -1202,6 +1229,8 @@ class Installer
         // but for other urls this is ambiguous and could result in bad outcomes
         if (preg_match('{^https?://(?:(?:www\.)?bitbucket\.org|(api\.)?github\.com|(?:www\.)?gitlab\.com)/}i', $distUrl)) {
             $package->setDistUrl($distUrl);
+            $package->setDistType($distType);
+            $package->setDistSha1Checksum($distShaSum);
             $this->updateInstallReferences($package, $sourceReference);
         }
 
@@ -1301,11 +1330,6 @@ class Installer
 
         $rootRequires = array_merge($rootRequires, $rootDevRequires);
 
-        $requiredPackageNames = array();
-        foreach ($rootRequires as $require) {
-            $requiredPackageNames[] = $require->getTarget();
-        }
-
         $skipPackages = array();
         if (!$this->whitelistAllDependencies) {
             foreach ($rootRequires as $require) {
@@ -1322,13 +1346,19 @@ class Installer
 
         foreach ($this->updateWhitelist as $packageName => $void) {
             $packageQueue = new \SplQueue;
+            $nameMatchesRequiredPackage = false;
 
             $depPackages = $pool->whatProvides($packageName);
-
-            $nameMatchesRequiredPackage = in_array($packageName, $requiredPackageNames, true);
-
+            $matchesByPattern = array();
             // check if the name is a glob pattern that did not match directly
-            if (!$nameMatchesRequiredPackage) {
+            if (empty($depPackages)) {
+                // add any installed package matching the whitelisted name/pattern
+                $whitelistPatternSearchRegexp = BasePackage::packageNameToRegexp($packageName, '^%s$');
+                foreach ($localOrLockRepo->search($whitelistPatternSearchRegexp) as $installedPackage) {
+                    $matchesByPattern[] = $pool->whatProvides($installedPackage['name']);
+                }
+
+                // add root requirements which match the whitelisted name/pattern
                 $whitelistPatternRegexp = BasePackage::packageNameToRegexp($packageName);
                 foreach ($rootRequiredPackageNames as $rootRequiredPackageName) {
                     if (preg_match($whitelistPatternRegexp, $rootRequiredPackageName)) {
@@ -1336,6 +1366,10 @@ class Installer
                         break;
                     }
                 }
+            }
+
+            if (!empty($matchesByPattern)) {
+                $depPackages = array_merge($depPackages, call_user_func_array('array_merge', $matchesByPattern));
             }
 
             if (count($depPackages) == 0 && !$nameMatchesRequiredPackage && !in_array($packageName, array('nothing', 'lock', 'mirrors'))) {
@@ -1369,7 +1403,7 @@ class Installer
                             continue;
                         }
 
-                        if (isset($skipPackages[$requirePackage->getName()])) {
+                        if (isset($skipPackages[$requirePackage->getName()]) && !preg_match(BasePackage::packageNameToRegexp($packageName), $requirePackage->getName())) {
                             $this->io->writeError('<warning>Dependency "' . $requirePackage->getName() . '" is also a root requirement, but is not explicitly whitelisted. Ignoring.</warning>');
                             continue;
                         }

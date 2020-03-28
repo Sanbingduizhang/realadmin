@@ -125,7 +125,7 @@ class FileDownloader implements DownloaderInterface, ChangeReportInterface
         $fileName = $this->getFileName($package, $path);
 
         $processedUrl = $this->processUrl($package, $url);
-        $hostname = parse_url($processedUrl, PHP_URL_HOST);
+        $origin = RemoteFilesystem::getOrigin($processedUrl);
 
         $preFileDownloadEvent = new PreFileDownloadEvent(PluginEvents::PRE_FILE_DOWNLOAD, $this->rfs, $processedUrl);
         if ($this->eventDispatcher) {
@@ -150,7 +150,7 @@ class FileDownloader implements DownloaderInterface, ChangeReportInterface
                 $retries = 3;
                 while ($retries--) {
                     try {
-                        $rfs->copy($hostname, $processedUrl, $fileName, $this->outputProgress, $package->getTransportOptions());
+                        $rfs->copy($origin, $processedUrl, $fileName, $this->outputProgress, $package->getTransportOptions());
                         break;
                     } catch (TransportException $e) {
                         // if we got an http response with a proper code, then requesting again will probably not help, abort
@@ -215,8 +215,8 @@ class FileDownloader implements DownloaderInterface, ChangeReportInterface
     public function update(PackageInterface $initial, PackageInterface $target, $path)
     {
         $name = $target->getName();
-        $from = $initial->getPrettyVersion();
-        $to = $target->getPrettyVersion();
+        $from = $initial->getFullPrettyVersion();
+        $to = $target->getFullPrettyVersion();
 
         $actionName = VersionParser::isUpgrade($initial->getVersion(), $target->getVersion()) ? 'Updating' : 'Downgrading';
         $this->io->writeError("  - " . $actionName . " <info>" . $name . "</info> (<comment>" . $from . "</comment> => <comment>" . $to . "</comment>): ", false);

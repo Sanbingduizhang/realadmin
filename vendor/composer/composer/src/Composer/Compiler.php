@@ -18,6 +18,7 @@ use Composer\CaBundle\CaBundle;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 use Seld\PharUtils\Timestamps;
+use Seld\PharUtils\Linter;
 
 /**
  * The Compiler class compiles composer into a phar
@@ -162,6 +163,8 @@ class Compiler
         $util = new Timestamps($pharFile);
         $util->updateTimestamps($this->versionDate);
         $util->save($pharFile, \Phar::SHA1);
+
+        Linter::lint($pharFile);
     }
 
     /**
@@ -193,6 +196,7 @@ class Compiler
             $content = str_replace('@package_version@', $this->version, $content);
             $content = str_replace('@package_branch_alias_version@', $this->branchAliasVersion, $content);
             $content = str_replace('@release_date@', $this->versionDate->format('Y-m-d H:i:s'), $content);
+            $content = preg_replace('{SOURCE_VERSION = \'[^\']+\';}', 'SOURCE_VERSION = \'\';', $content);
         }
 
         $phar->addFromString($path, $content);

@@ -28,7 +28,7 @@ use Symfony\Contracts\Service\ResetInterface;
 class TraceableAdapter implements AdapterInterface, CacheInterface, PruneableInterface, ResettableInterface
 {
     protected $pool;
-    private $calls = array();
+    private $calls = [];
 
     public function __construct(AdapterInterface $pool)
     {
@@ -45,10 +45,10 @@ class TraceableAdapter implements AdapterInterface, CacheInterface, PruneableInt
         }
 
         $isHit = true;
-        $callback = function (CacheItem $item) use ($callback, &$isHit) {
+        $callback = function (CacheItem $item, bool &$save) use ($callback, &$isHit) {
             $isHit = $item->isHit();
 
-            return $callback($item);
+            return $callback($item, $save);
         };
 
         $event = $this->start(__FUNCTION__);
@@ -89,6 +89,8 @@ class TraceableAdapter implements AdapterInterface, CacheInterface, PruneableInt
 
     /**
      * {@inheritdoc}
+     *
+     * @return bool
      */
     public function hasItem($key)
     {
@@ -102,6 +104,8 @@ class TraceableAdapter implements AdapterInterface, CacheInterface, PruneableInt
 
     /**
      * {@inheritdoc}
+     *
+     * @return bool
      */
     public function deleteItem($key)
     {
@@ -115,6 +119,8 @@ class TraceableAdapter implements AdapterInterface, CacheInterface, PruneableInt
 
     /**
      * {@inheritdoc}
+     *
+     * @return bool
      */
     public function save(CacheItemInterface $item)
     {
@@ -128,6 +134,8 @@ class TraceableAdapter implements AdapterInterface, CacheInterface, PruneableInt
 
     /**
      * {@inheritdoc}
+     *
+     * @return bool
      */
     public function saveDeferred(CacheItemInterface $item)
     {
@@ -142,7 +150,7 @@ class TraceableAdapter implements AdapterInterface, CacheInterface, PruneableInt
     /**
      * {@inheritdoc}
      */
-    public function getItems(array $keys = array())
+    public function getItems(array $keys = [])
     {
         $event = $this->start(__FUNCTION__);
         try {
@@ -151,7 +159,7 @@ class TraceableAdapter implements AdapterInterface, CacheInterface, PruneableInt
             $event->end = microtime(true);
         }
         $f = function () use ($result, $event) {
-            $event->result = array();
+            $event->result = [];
             foreach ($result as $key => $item) {
                 if ($event->result[$key] = $item->isHit()) {
                     ++$event->hits;
@@ -167,11 +175,17 @@ class TraceableAdapter implements AdapterInterface, CacheInterface, PruneableInt
 
     /**
      * {@inheritdoc}
+     *
+     * @return bool
      */
-    public function clear()
+    public function clear(string $prefix = '')
     {
         $event = $this->start(__FUNCTION__);
         try {
+            if ($this->pool instanceof AdapterInterface) {
+                return $event->result = $this->pool->clear($prefix);
+            }
+
             return $event->result = $this->pool->clear();
         } finally {
             $event->end = microtime(true);
@@ -180,6 +194,8 @@ class TraceableAdapter implements AdapterInterface, CacheInterface, PruneableInt
 
     /**
      * {@inheritdoc}
+     *
+     * @return bool
      */
     public function deleteItems(array $keys)
     {
@@ -194,6 +210,8 @@ class TraceableAdapter implements AdapterInterface, CacheInterface, PruneableInt
 
     /**
      * {@inheritdoc}
+     *
+     * @return bool
      */
     public function commit()
     {
@@ -257,7 +275,7 @@ class TraceableAdapter implements AdapterInterface, CacheInterface, PruneableInt
 
     public function clearCalls()
     {
-        $this->calls = array();
+        $this->calls = [];
     }
 
     protected function start($name)

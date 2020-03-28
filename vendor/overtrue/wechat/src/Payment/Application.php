@@ -22,6 +22,7 @@ use EasyWeChat\OfficialAccount;
  * Class Application.
  *
  * @property \EasyWeChat\Payment\Bill\Client              $bill
+ * @property \EasyWeChat\Payment\Fundflow\Client          $fundflow
  * @property \EasyWeChat\Payment\Jssdk\Client             $jssdk
  * @property \EasyWeChat\Payment\Order\Client             $order
  * @property \EasyWeChat\Payment\Refund\Client            $refund
@@ -31,6 +32,8 @@ use EasyWeChat\OfficialAccount;
  * @property \EasyWeChat\BasicService\Url\Client          $url
  * @property \EasyWeChat\Payment\Transfer\Client          $transfer
  * @property \EasyWeChat\Payment\Security\Client          $security
+ * @property \EasyWeChat\Payment\ProfitSharing\Client     $profit_sharing
+ * @property \EasyWeChat\Payment\Contract\Client          $contract
  * @property \EasyWeChat\OfficialAccount\Auth\AccessToken $access_token
  *
  * @method mixed pay(array $attributes)
@@ -46,6 +49,7 @@ class Application extends ServiceContainer
         BasicService\Url\ServiceProvider::class,
         Base\ServiceProvider::class,
         Bill\ServiceProvider::class,
+        Fundflow\ServiceProvider::class,
         Coupon\ServiceProvider::class,
         Jssdk\ServiceProvider::class,
         Merchant\ServiceProvider::class,
@@ -56,6 +60,8 @@ class Application extends ServiceContainer
         Sandbox\ServiceProvider::class,
         Transfer\ServiceProvider::class,
         Security\ServiceProvider::class,
+        ProfitSharing\ServiceProvider::class,
+        Contract\ServiceProvider::class,
     ];
 
     /**
@@ -179,6 +185,10 @@ class Application extends ServiceContainer
         }
 
         $key = $this->inSandbox() ? $this['sandbox']->getKey() : $this['config']->key;
+
+        if (empty($key)) {
+            throw new InvalidArgumentException('config key should not empty.');
+        }
 
         if (32 !== strlen($key)) {
             throw new InvalidArgumentException(sprintf("'%s' should be 32 chars length.", $key));

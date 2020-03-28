@@ -17,7 +17,6 @@ use EasyWeChat\Kernel\Exceptions\InvalidArgumentException;
 use EasyWeChat\Kernel\Exceptions\RuntimeException;
 use EasyWeChat\Kernel\Traits\HasHttpRequests;
 use EasyWeChat\Kernel\Traits\InteractsWithCache;
-use Pimple\Container;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -28,10 +27,11 @@ use Psr\Http\Message\ResponseInterface;
  */
 abstract class AccessToken implements AccessTokenInterface
 {
-    use HasHttpRequests, InteractsWithCache;
+    use HasHttpRequests;
+    use InteractsWithCache;
 
     /**
-     * @var \Pimple\Container
+     * @var \EasyWeChat\Kernel\ServiceContainer
      */
     protected $app;
 
@@ -56,11 +56,6 @@ abstract class AccessToken implements AccessTokenInterface
     protected $token;
 
     /**
-     * @var int
-     */
-    protected $safeSeconds = 500;
-
-    /**
      * @var string
      */
     protected $tokenKey = 'access_token';
@@ -73,9 +68,9 @@ abstract class AccessToken implements AccessTokenInterface
     /**
      * AccessToken constructor.
      *
-     * @param \Pimple\Container $app
+     * @param \EasyWeChat\Kernel\ServiceContainer $app
      */
-    public function __construct(Container $app)
+    public function __construct(ServiceContainer $app)
     {
         $this->app = $app;
     }
@@ -114,9 +109,12 @@ abstract class AccessToken implements AccessTokenInterface
             return $cache->get($cacheKey);
         }
 
+        /** @var array $token */
         $token = $this->requestToken($this->getCredentials(), true);
 
         $this->setToken($token[$this->tokenKey], $token['expires_in'] ?? 7200);
+
+        $this->app->events->dispatch(new Events\AccessTokenRefreshed($this));
 
         return $token;
     }
@@ -127,15 +125,16 @@ abstract class AccessToken implements AccessTokenInterface
      *
      * @return \EasyWeChat\Kernel\Contracts\AccessTokenInterface
      *
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function setToken(string $token, int $lifetime = 7200): AccessTokenInterface
     {
         $this->getCache()->set($this->getCacheKey(), [
             $this->tokenKey => $token,
             'expires_in' => $lifetime,
-        ], $lifetime - $this->safeSeconds);
+        ], $lifetime);
 
         if (!$this->getCache()->has($this->getCacheKey())) {
             throw new RuntimeException('Failed to cache access token.');
@@ -212,6 +211,7 @@ abstract class AccessToken implements AccessTokenInterface
      * @return ResponseInterface
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function sendRequest(array $credentials): ResponseInterface
     {
